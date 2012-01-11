@@ -4,20 +4,40 @@
 	        <div class="employees-overview active">
 	            <ul id="sub-nav">
 	                <li>
-	                    <a id="bAdd" class="subButton" name="bAdd">Create</a>
+	                    <a 	id="bAdd" 
+							class="subButton" 
+							ng:click="addNew()"
+							name="bAdd">
+						  Create
+					  	</a>
 	                </li>
 	                <li>
-	                    <a id="bEdit" class="subButton" name="bEdit">Edit</a>
+	                    <a 	id="bEdit" 
+							ng:class="(selected && 'subButton') || 'disabledButton'"
+							ng:click="edit(selected)" 
+							name="bEdit">
+						  Edit
+						</a>
 	                </li>
 	                <li>
-	                    <a id="bDelete" class="subButton" name="bDelete">Delete</a>
+	                    <a 	id="bDelete" 
+							ng:class="(selected && 'subButton') || 'disabledButton'" 
+							ng:click="remove(selected)"
+							name="bDelete">
+						  Delete
+						</a>
 	                </li>
 	            </ul>
 	            <div id="employee-list-container">
 	                <ul id="employee-list">
-	                    <li class="item" ng:repeat="employee in employees"> 
+						
+	                    <li ng:class="(selected==employee && 'active') || ''" 
+							ng:repeat="employee in employees" 
+							ng:click="select(employee)" > 
+							
 	                        {{ employee.firstName }} {{ employee.lastName }} 
 	                    </li>
+						
 	                </ul>
 	            </div>
 	        </div>
