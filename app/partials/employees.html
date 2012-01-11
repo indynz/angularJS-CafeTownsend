@@ -1,0 +1,26 @@
+<div class="main-view-content stack">
+              
+	<div class="employees active">
+	        <div class="employees-overview active">
+	            <ul id="sub-nav">
+	                <li>
+	                    <a id="bAdd" class="subButton" name="bAdd">Create</a>
+	                </li>
+	                <li>
+	                    <a id="bEdit" class="subButton" name="bEdit">Edit</a>
+	                </li>
+	                <li>
+	                    <a id="bDelete" class="subButton" name="bDelete">Delete</a>
+	                </li>
+	            </ul>
+	            <div id="employee-list-container">
+	                <ul id="employee-list">
+	                    <li class="item" ng:repeat="employee in employees"> 
+	                        {{ employee.firstName }} {{ employee.lastName }} 
+	                    </li>
+	                </ul>
+	            </div>
+	        </div>
+    </div>
+
+</div>

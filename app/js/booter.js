@@ -1,0 +1,2 @@
+var CafeTownsend = { };
+    CafeTownsend.Controllers = { };

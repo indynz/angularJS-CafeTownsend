@@ -1,0 +1,37 @@
+<div class="main-view-content stack">
+              
+  <div class="login active">
+      <form id="login-form" ng:submit="authenticateUser();">
+      	<fieldset>
+      		<legend>
+      			Login
+      		</legend>
+
+      		<label>
+      			<span>Username *</span>
+      			<input  type="text"
+      					ng:model="user.userName"
+      					pattern="ThomasBurleson@gmail.com"
+      					title="Enter your email as your username ;"
+      					required
+      					ng:focus="user.userName == ''"/>
+      		</label>
+
+      		<label>
+      			<span>Password *</span>
+      			<input  type="password"
+      					ng:model="user.password"
+      					pattern="angular"
+      					title="Enter 'angular' as your password"
+      					required />
+      		</label>
+
+      		<button type="submit" class="main-button">Login</button>
+      		<p>Password: "angular"</p>
+
+
+      	</fieldset>
+      </form>
+  </div>
+
+</div>

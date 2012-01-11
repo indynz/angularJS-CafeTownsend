@@ -1,0 +1,46 @@
+<div class="employee-edit">
+    <ul id="sub-nav">
+    	<li ng:hide="isEditing"><a class="subButton bBack">Back</a></li>
+    	<li ng:show="isEditing"><a class="subButton bCancel">Cancel</a></li>
+    </ul>
+    <form>
+    	<fieldset>
+    		<legend ng:hide="isEditing">Add</legend>
+    		<legend ng:show="isEditing">Edit</legend>
+    		
+    		<label>
+    			<span>First name:</span>
+    			<input type="text" ng:model="employee.firstName" required autofocus />
+    		</label>
+    		<label>
+    			<span>Last name:</span>
+    			<input 	type="text" ng:model="employee.lastName" required />
+    		</label>
+
+    		<label>
+    			<span>Start date:</span>
+    			<!--
+    				   Check date format MM/DD/YYYY  using regex:
+    				   @see: http://www.regular-expressions.info/regexbuddy/datemmddyyyy.html
+    				-->
+    			<input type="text"
+					ng:model="employee.startDate | date"
+					pattern="(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)\d\d"
+					title="Please enter a date formatting MM/DD/YYYY"
+					required
+					/>
+    		</label>
+
+    		<label>
+    		    <span>Email:</span>
+    			<input type="email" ng:model="employee.email" required />
+    		</label>
+
+    		<div class="formFooter">
+    			<button type="submit" class="main-button">Save</button>
+    			<button class="bDelete main-button" ng:hide="isEditing">Delete</button>
+    		</div>
+
+    	</fieldset>
+    </form>
+</div>
