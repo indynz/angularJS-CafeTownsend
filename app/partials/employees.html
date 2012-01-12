@@ -1,46 +1,50 @@
 <div class="main-view-content stack">
               
-	<div class="employees active">
-	        <div class="employees-overview active">
-	            <ul id="sub-nav">
-	                <li>
-	                    <a 	id="bAdd" 
-							class="subButton" 
-							ng:click="addNew()"
-							name="bAdd">
-						  Create
-					  	</a>
-	                </li>
-	                <li>
-	                    <a 	id="bEdit" 
-							ng:class="(selected && 'subButton') || 'disabledButton'"
-							ng:click="edit(selected)" 
-							name="bEdit">
-						  Edit
-						</a>
-	                </li>
-	                <li>
-	                    <a 	id="bDelete" 
-							ng:class="(selected && 'subButton') || 'disabledButton'" 
-							ng:click="remove(selected)"
-							name="bDelete">
-						  Delete
-						</a>
-	                </li>
-	            </ul>
-	            <div id="employee-list-container">
-	                <ul id="employee-list">
-						
-	                    <li ng:class="(selected==employee && 'active') || ''" 
-							ng:repeat="employee in employees" 
-							ng:click="select(employee)" > 
-							
-	                        {{ employee.firstName }} {{ employee.lastName }} 
-	                    </li>
-						
-	                </ul>
-	            </div>
-	        </div>
+  <div class="employees active">
+          <div class="employees-overview active">
+              <ul id="sub-nav">
+                  <li>
+                      <a  id="bAdd" 
+                          class="subButton" 
+                          ng:click="addNew()"
+                          name="bAdd">
+                        Create
+                      </a>
+                  </li>
+                  <li>
+                      <a  id="bEdit" 
+                          ng:show="selected != null"
+                          ng:class="(selected && 'subButton') || 'disabledButton'"
+                          ng:click="edit(selected)" 
+                          name="bEdit">
+                        Edit
+                      </a>
+                  </li>
+                  <li>
+                      <a  id="bDelete" 
+                          ng:show="selected != null"
+                          ng:class="(selected && 'subButton') || 'disabledButton'" 
+                          ng:click="remove(selected)"
+                          name="bDelete">
+                        Delete
+                      </a>
+                  </li>
+              </ul>
+              <div id="employee-list-container">
+                  <ul id="employee-list">
+            
+                      <li ng:class="(selected==employee && 'active') || ''" 
+                          ng:repeat="employee in employees" 
+                          ng:click="select(employee)" 
+                          ng:dblclick="edit(employee)" > 
+              
+                          {{ employee.firstName }} {{ employee.lastName }} 
+                      </li>
+            
+                  </ul>
+              </div>
+          </div>
     </div>
 
 </div>
+
