@@ -19,6 +19,9 @@ AngularJS is an amazing IoC MVC framework for Javascript applications. Supportin
 This project contributes an [**Angular.js**](http://angularjs.org/) port of the CafeTownsend application.
 CafeTownsend - AngularJS is written in CoffeeScript and uses the [Angular.js](http://angularjs.org/) IoC framework. It uses Mustache for HTML templating and [{Less}](http://lesscss.org/) for dynamic stylesheet language support. 
 
+![Screenshot](https://github.com/ThomasBurleson/angularJS-CafeTownsend/raw/master/app/data/images/screens.png)
+<br/>
+
 The AngularJS port also demonstrates significant advantages over the SpineJS implementation:
 
 *  Pageless Architecture
@@ -32,18 +35,7 @@ The AngularJS port also demonstrates significant advantages over the SpineJS imp
 *  Demonstrates `separation-of-concerns` for Model-Views-Controllers
 *  Demonstates `dependency injection` for services and Controllers
 *  Demonstrates best practices for `Model-View-View-Model (MVVM)` architectures
-
-## Todo
-
-This effort is still ongoing with some in-progress effort that will provide the following features:
-
-*  Provide `loading indicator` as startup screen
-*  Support deep linking with synch data loads
-*  Convert disorganized CSS to LESS
-*  Use Coffeescript
-*  Build CafeTownsend Tests/Scenarios
-*  Create view slide transitions 
-*  Use AMD loader
+<br/>
 
 
 
@@ -67,45 +59,61 @@ This effort is still ongoing with some in-progress effort that will provide the 
 
         members.json      --> external, simple JSON data 
 
-      js/               --> javascript files
-        controllers.js  --> application controllers
-        filters.js      --> custom angular filters
-        services.js     --> custom angular services
-        widgets.js      --> custom angular widgets
-      lib/              --> angular and 3rd party javascript libraries
-        angular/
-          angular.js            --> the latest angular js
-          angular.min.js        --> the latest minified angular js
-          angular-ie-compat.js  --> angular patch for IE 6&7 compatibility
-          version.txt           --> version number
+      js/                 --> javascript files
+		booter.js		  --> application booter
+        controllers.js    --> application controllers
+        services.js       --> custom angular services
+        directives.js     --> custom angular directives
+
+        lib/              --> angular and 3rd party javascript libraries
+            angular.js      --> the latest angular js
+			jquery.min.js   --> jQuery v1.7 minified
+			uuid.js			--> uuid generator
 
     config/jsTestDriver.conf    --> config file for JsTestDriver
 
-    logs/               --> JSTD and other logs go here (git-ignored)
+    logs/                 --> JSTD and other logs go here (git-ignored)
 
-    scripts/            --> handy shell/js/ruby scripts
-      test-server.bat   --> starts JSTD server (windows)
-      test-server.sh    --> starts JSTD server (*nix)
-      test.bat          --> runs all unit tests (windows)
-      test.sh           --> runs all unit tests (*nix)
-      watchr.rb         --> config script for continuous testing with watchr
-      web-server.js     --> simple development webserver based on node.js
+    scripts/              --> handy shell/js/ruby scripts
+      test-server.bat     --> starts JSTD server (windows)
+      test-server.sh      --> starts JSTD server (*nix)
+      test.bat            --> runs all unit tests (windows)
+      test.sh             --> runs all unit tests (*nix)
+      watchr.rb           --> config script for continuous testing with watchr
+      web-server.js       --> simple development webserver based on node.js
 
-    test/               --> test source files and libraries
-      e2e/              -->
-        runner.html     --> end-to-end test runner (open in your browser to run)
-        scenarios.js    --> end-to-end specs
+    test/                 --> test source files and libraries
+      e2e/                -->
+        runner.html       --> end-to-end test runner (open in your browser to run)
+        scenarios.js      --> end-to-end specs
+
       lib/
         angular/                --> angular testing libraries
           angular-mocks.js      --> mocks that replace certain angular services in tests
           angular-scenario.js   --> angular's scenario (end-to-end) test runner library
           version.txt           --> version file
+
         jasmine/                --> Pivotal's Jasmine - an elegant BDD-style testing framework
         jasmine-jstd-adapter/   --> bridge between JSTD and Jasmine
         jstestdriver/           --> JSTD - JavaScript test runner
+
       unit/                     --> unit level specs/tests
         controllersSpec.js      --> specs for controllers
 
+## Pending Features
+
+This effort is still ongoing with some in-progress effort that will provide the following features:
+
+*  Provide `loading indicator` as startup screen
+*  Support deep linking with synch data loads
+*  Convert disorganized CSS to LESS
+*  Use Coffeescript
+*  Build CafeTownsend Tests/Scenarios
+*  Create view slide transitions 
+*  Use AMD loader
+
 ## Contact
 
+Stay tuned for upcoming blog article and video on [GridLinked.info](www.gridlinked.info)<br/>
 For more information on angular please check out http://angularjs.org/
+

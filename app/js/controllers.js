@@ -1,5 +1,8 @@
 /**
 * ******************************************************************************************************
+*   AngularJS - CafeTownsend
+* ******************************************************************************************************
+*
 *   AngularJS controllers are essentially `presentation models` used for a specific view or route within
 *   the HTML5 client.
 *
@@ -13,6 +16,10 @@
 *         Instead, AngularJS will construct `scopes` and then `extends` those scope instances using 
 *         the <xxx>Controller constructor/factory function. The `extend` effectively injects controller
 *         properties and methods into the targeted scope.
+*
+*
+* 	Copyright (c) 2011 Mindspace, LLC.
+* 	Open source under the MIT License.
 *
 * ******************************************************************************************************
 */

@@ -1,6 +1,10 @@
 /**
 * ******************************************************************************************************
+*   AngularJS - CafeTownsend
 * ******************************************************************************************************
+*
+* 	Copyright (c) 2011 Mindspace, LLC.
+* 	Open source under the MIT License.
 *
 *   AngularJS services are objects responsible for common web tasks (typically data services) and
 *   are managed by the AngularJS dependency injection system. These services are singletons and are 
@@ -15,7 +19,10 @@
 *   Note: these services are instantiated as singletons and auto-registered with the AngularJS 
 *         injection system via `angular.service( ... )`
 *
-* ******************************************************************************************************
+*
+* 	Copyright (c) 2011 Mindspace, LLC.
+* 	Open source under the MIT License.
+*
 * ******************************************************************************************************
 */
 

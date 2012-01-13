@@ -1,3 +1,12 @@
+/**
+* ******************************************************************************************************
+*   AngularJS - CafeTownsend
+* ******************************************************************************************************
+*
+* 	Copyright (c) 2011 Mindspace, LLC.
+* 	Open source under the MIT License.
+*
+*/
 angular.directive("ng:focus", function(expression, element){
   
   return function(element) {
