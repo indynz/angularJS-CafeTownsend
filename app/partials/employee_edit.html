@@ -5,7 +5,7 @@
         <div class="employee-edit active">
             <ul id="sub-nav">
               <li ng:show="!isEditing" ng:click="cancel()">
-                <a class="subButton bCancel">Cancel</a>
+                <a class="subButton bCancel"><< Cancel</a>
               </li>
             </ul>
             <form ng:submit="save()" >
@@ -19,7 +19,7 @@
                 </label>
                 <label>
                   <span>Last name:</span>
-                  <input   type="text" ng:model="employee.lastName" required />
+                  <input type="text" ng:model="employee.lastName" required />
                 </label>
 
                 <label>

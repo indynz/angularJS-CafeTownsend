@@ -12,7 +12,7 @@
           
           <header>
               <div 	ng:show="user.authenticated"  style="top:0px; display:none;" >					  
-			      <p class="main-button"  ng:click"logout()"> Logout </p>
+			      <p class="main-button logout"  ng:click="logoutUser()"> Logout </p>
           	      <p class="session-user"> {{user.userName}} </p>
               </div>
           </header>

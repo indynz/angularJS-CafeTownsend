@@ -30,52 +30,43 @@
  *  http://docs.angularjs.org/#!angular.service
  * 
  */
-angular.service( 'CafeTownsend', function( $route, $location, $window, sessionService, $log )  {
+angular.service( 'CafeTownsend', function( sessionService, $route, $location, $window, $log )  {
     $log.log('initializing CafeTownsend routes...');
     
-    // Configure session model (for authentication) as root model
-    $route.parent( this.$new( CafeTownsend.Controllers.SessionController ) );
+	var root = this;		// root scope
+	
+    // Configure session model (for authentication) as root/parent scope for scopes created on route change.
+    $route.parent( root.$new( CafeTownsend.Controllers.SessionController ) );
     
     // Configure template rendering based on routes
     $route.when('/login',          { template: 'partials/login.html',         controller: CafeTownsend.Controllers.LoginController } );
     $route.when('/employee',       { template: 'partials/employees.html',     controller: CafeTownsend.Controllers.EmployeeController } );
-    $route.when('/employee/edit',  { template: 'partials/employee_edit.html', controller: CafeTownsend.Controllers.EmployeeEditController } );
+    $route.when('/employee/:id',   { template: 'partials/employee_edit.html', controller: CafeTownsend.Controllers.EmployeeEditController } );
     $route.otherwise({ redirectTo: '/employee' });
         
     // Now listen for `#afterRouteChange` events
-    this.$on( '$afterRouteChange', function( current, previous ) {
+    root.$on( '$afterRouteChange', function( current, previous ) {
       
       var user          = sessionService.session();
       var authenticated = ( user && user.authenticated );
       var view          = authenticated ? $location.path() : "";
-        
-      switch( view )
-      {
-        case "/employee/edit" :
-        case "/employee" :
-        {
-            if( angular.isDefined( $route.current.scope ) )
-            {
-              $route.current.scope.params = $route.current.params;
-            }
-            
-            $window.scrollTo(0,0);        
-            break;
-        }
-        
-        case "/login" :
-        default: 
-        {
-            // Must login before other views are available.
-          
-            $location.path( authenticated ? '/employee' : '/login' );
-            break;
-        }
-      }
-      
+      	  
+	  	  // @TODO: use regular expression to match `/employee` or `/employee/<uuid>` paths only
+	  
+		  if ( view.indexOf( "/employee") > -1 ) 
+		  {
+			  // Either `/employee` or `/employee/<uuid>` is requested
+	          $window.scrollTo(0,0);        
+		  
+		  } else {
+		  
+	          // Must login before other views are available.
+	          $location.path( authenticated ? '/employee' : '/login' );
+		  }
+		  
     });
     
-}, { $inject : ['$route', '$location', '$window', 'sessionService', '$log' ], $eager  : true } );
+}, { $inject : ['sessionService', '$route', '$location', '$window', '$log' ], $eager  : true } );
 
 
 /**
@@ -114,7 +105,7 @@ angular.service('sessionService', function( $log )  {
             }
         }; 
     
-}, { $inject : [ '$log' ], $eager  : true } );
+}, { $inject : [ '$log' ], $eager  : false } );
 
 
 /**
@@ -125,54 +116,89 @@ angular.service('sessionService', function( $log )  {
 angular.service('employeeService', function( $log )  {
   $log.log('initializing Employee services...');
   
-  var employees = [{ 
-                    id        : uuid.v1(), 
-                    firstName : "Thomas", 
-                    lastName  : "Burleson",
-                    email     : "ThomasBurleson@Gmail.com",
-                    startDate : '12/09/2011'
-                  }];
-  
-  // Create new employee record
-  // NOTE: Here we define the properties of an `employee`
-  function createEmployee() {    
-    // Use the uuid::v1() to create time-based random UUID
-    var employee = { 
-            id        : uuid.v1(), 
-            firstName : "", 
-            lastName  : "",
-            email     : "",
-            startDate : '01/09/2012',
-			isNew     : true
-        };
+	  // Create new employee record
+	  // NOTE: Here we define the properties of an `employee`
+	  function createEmployee() {    
+	    // Use the uuid::v1() to create time-based random UUID
+	    var employee = { 
+	            id        : uuid.v1(), 
+	            firstName : "", 
+	            lastName  : "",
+	            email     : "",
+	            startDate : '01/09/2012',
+				isNew     : true
+	        };
         
-        employees.push( employee );
+	        employees.push( employee );
         
-    return employee;
-  }
+	    return employee;
+	  }
+
+	  // Load all known employees
+	  function loadEmployees() {
+		  if ( angular.isUndefined(employees) ) {
+		    employees = [{ 
+		                    id        : uuid.v1(), 
+		                    firstName : "Thomas", 
+		                    lastName  : "Burleson",
+		                    email     : "ThomasBurleson@Gmail.com",
+		                    startDate : '12/09/2011'
+		                }];
+		  }
+					
+		  return employees;
+	  }
+
+	  // Simulate save functionality...
+	  function saveEmployee( target ) {
+		  if ( angular.isDefined(target) )
+		  {
+			  // noop;
+		  }	  
+		  return target;
+	  }
   
-  // Remove record by id (if found); return updated employees
-  function removeEmployee( id ) {
-    var buffer = [ ];
-    for (var j=0; j<employees.length; j++)
-    {
-      var it = employees[j];
-      if ( it.id != id )
-      { 
-        buffer.push( it);
-      }
-    }
+	  // Remove record by id (if found); return updated employees
+	  function deleteEmployee( target ) {
+		var id 		= angular.isString(target) ? target : target['id'],
+	    	buffer 	= [ ];
+		
+		angular.forEach( employees,  function(employee, key) {
+  	      if ( employee.id != id )
+  	      { 
+  	        buffer.push( it);
+  	      }
+		});
     
-    return (employees = buffer);
-  }
-  
+	    return (employees = buffer);
+	  }
+	  
+	  // Select employee by ID
+	  function findEmployee( id ) {
+		var found = null;
+		
+  		angular.forEach( employees,  function(employee, key) {
+    	      if ( employee.id == id )
+    	      { 
+    	        found = employee;
+    	      }
+  		});
+		
+		return found;
+	  }
+	  
+  // Auto-load employees
+  var employees = loadEmployees();
+    
   // Expose service CRUD functions
   return {
       selected  : null,
-      loadAll   : function()   { return employees;           },
-      createNew : function()   { return createEmployee();    },
-      remove    : function(id) { return removeEmployee(id);  }
+	  findByID  : function(id)  { return findEmployee(id);	},
+      loadAll   : function()   	{ return loadEmployees();       },
+	  save      : function(who) { return saveEmployee( who );	},
+      create	: function()   	{ return createEmployee();    	},
+      delete    : function(who) { return deleteEmployee( who ); }
     };
 
-}, { $inject : [ '$log' ], $eager  : true } );
+}, { $inject : [ '$log' ], $eager  : false } );
 

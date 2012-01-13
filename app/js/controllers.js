@@ -9,9 +9,10 @@
 *   Each controller can define its own specific dependencies that will be injected during `construction`
 *   As such, shared data models and routes are managed at the `services` layer.
 *
-*   Note: these controllers should NEVER be instantiated manually via new <xxx>Controller() syntax.
-*         Instead, AngularJS will construct scopes which are then `extend` those scope instances using 
-*         the <xxx>Controller constructor/factory function. 
+*   Note: These controllers should NEVER be instantiated manually via `new <xxx>Controller()` syntax.
+*         Instead, AngularJS will construct `scopes` and then `extends` those scope instances using 
+*         the <xxx>Controller constructor/factory function. The `extend` effectively injects controller
+*         properties and methods into the targeted scope.
 *
 * ******************************************************************************************************
 */
@@ -23,18 +24,18 @@
  * Configure session and authentication information for entire app.
  */
 CafeTownsend.Controllers.SessionController = function ( sessionService, $location, $route ) {
-  var self      = this;
-      self.user = sessionService.session();
+  var scope      = this;
+      scope.user = sessionService.session();
   
-  self.logout  = function(event) {
+  scope.logoutUser  = function( event ) {
     sessionService.logout();
     $location.path( "/login" );
   };
 
   // Configure session model (for authentication)
-  // NOTE: redundant here... as already performed in services.js
   
-  $route.parent( self );
+  // NOTE: this is redundant here... as already performed in services.js
+  // $route.parent( scope );
 }
 CafeTownsend.Controllers.SessionController.$inject = [ 'sessionService', '$location', '$route' ];
 
@@ -47,12 +48,12 @@ CafeTownsend.Controllers.SessionController.$inject = [ 'sessionService', '$locat
  * Using the current userName/password, authenticate the user.
  */
 CafeTownsend.Controllers.LoginController = function ( sessionService, $location ) {
-  var self = this;
+  var scope = this;
 
   /**
    * Authenticate user using specified username and password!
    */
-  self.authenticateUser = function() {
+  scope.authenticateUser = function() {
     var user = sessionService.session();
     
     if ((user.userName != "") && (user.password == "angular"))
@@ -72,38 +73,41 @@ CafeTownsend.Controllers.LoginController.$inject = [ 'sessionService', '$locatio
  * Manages the presentation model for the EmployeeList view
  * Supports CRUD operations, employee selection and routing to editor
  */
-CafeTownsend.Controllers.EmployeeController = function ( delegate, $location ) {
-  var self = this;
-    self.employees =  delegate.loadAll();
-    self.selected  =  delegate.selected;
+CafeTownsend.Controllers.EmployeeController = function ( session, delegate, $location ) {
+  var scope = this;
+    scope.employees =  delegate.loadAll();
+    scope.selected  =  delegate.selected;
+  
+  
   
   // 1) Create a new employee and show in editor
-  self.addNew    = function () {
-    self.edit( delegate.createNew() );
+  scope.addNew    = function () {
+    scope.edit( delegate.create() );
   };
   
   // 2) Delete selected employee
-  self.remove    = function ( employee ) {
+  scope.remove    = function ( employee ) {
     if ( angular.isUndefined(employee) ) return;
     
-    self.employees = delegate.remove( employee.id );
-    self.selected  = (delegate.selected = null);
+    scope.employees = delegate.delete( employee );
+    scope.selected  = (delegate.selected = null);
   };
 
   // 3) Select employee as `current`
-  self.select    = function (employee) {
-    self.selected = (delegate.selected = employee);
+  scope.select    = function (employee) {
+    scope.selected = (delegate.selected = employee);
   };
   
   // 4) Edit specified employee in editor view
-  self.edit     = function ( employee ) {
+  scope.edit     = function ( employee ) {
     if ( angular.isUndefined(employee) ) return;
     
-    self.select(employee);
-    $location.path('/employee/edit');
+    scope.select(employee);
+	$location.path( '/employee/'+employee.id );
   };
+  
 }
-CafeTownsend.Controllers.EmployeeController .$inject = [ 'employeeService', '$location' ];
+CafeTownsend.Controllers.EmployeeController.$inject = [ 'sessionService', 'employeeService', '$location' ];
 
 
 
@@ -115,49 +119,58 @@ CafeTownsend.Controllers.EmployeeController .$inject = [ 'employeeService', '$lo
  * Manages the presentation model for the EmployeeEditor view
  * Supports Save and Cancel edit employee operations
  */
-CafeTownsend.Controllers.EmployeeEditController = function ( delegate, $location ) {
-  var self           =  this;
-      self.employee  =  angular.Object.copy( delegate.selected, { } );
-      self.isEditing =  self.employee.isNew || false;
+CafeTownsend.Controllers.EmployeeEditController = function ( delegate, $routeParams, $location ) {
+  var scope  =  this;
+  
+	  if ( angular.isDefined( $routeParams.id ) ) {
+	  	  // Adjust to deeplink to insure the correct employee is selected
+		  
+		  delegate.selected = delegate.findByID( $routeParams.id );
+	  }
+	  
+      scope.employee  =  angular.Object.copy( delegate.selected, { } );
+      scope.isEditing =  scope.employee.isNew || false;
   
   // 1) Save updated employee information & return to employee list
-  self.save    = function() {
-    if ( self.employee != null ) {
-      angular.Object.copy( self.employee, delegate.selected );
+  scope.save    = function() {
+    if ( scope.employee != null ) {
+      angular.Object.copy( scope.employee, delegate.selected );
     }
     
     // Remove the `isNew` property
     if ( delegate.selected != null ) {
       delete delegate.selected.isNew;
+	  
+	  delegate.save( delegate.selected );
     }
     
-    $location.path('/employee');
+	$location.path('/employee');
   };
   
   // 2) Cancel edits for current employee
-  self.cancel    = function() {
-     if ( self.isEditing ) 
+  scope.cancel    = function() {
+     if ( scope.isEditing ) 
      {
        // If cancelling a new record... be sure to 
        // auto-remove it from our list also
-       delegate.remove( self.employee.id );
+       delegate.delete( scope.employee.id );
        delegate.selected = null;    
        
-       self.employee     = null;
+       scope.employee     = null;
      }
     
      $location.path('/employee');
   };
 
   // 3) Delete current employee
-  self.remove    = function ( ) {    
-    delegate.remove( self.employee.id );
+  scope.remove    = function ( ) {    
+    delegate.delete( scope.employee.id );
 
     delegate.selected = null;    
-    self.employee     = null;
+    scope.employee     = null;
     
     $location.path('/employee');
   };
 
 }
-CafeTownsend.Controllers.EmployeeEditController .$inject = [ 'employeeService', '$location' ];
+CafeTownsend.Controllers.EmployeeEditController.$inject = [ 'employeeService', '$routeParams', '$location' ];

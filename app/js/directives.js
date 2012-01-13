@@ -14,15 +14,15 @@ angular.directive("ng:focus", function(expression, element){
 
 angular.directive("ng:dblclick", function(expression, element){
   return function(element){
-    var self = this;
+    var scope = this;
   
     element.bind('dblclick', function(event) {
-      self.$apply(expression);
-    
+
+      scope.$apply(expression);
       event.stopImmediatePropagation();
-      event.preventDefault();
       
       return false;
+	  
     });
   };
 });

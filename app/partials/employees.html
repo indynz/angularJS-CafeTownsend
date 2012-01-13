@@ -30,13 +30,12 @@
                       </a>
                   </li>
               </ul>
-              <div id="employee-list-container">
+              <div id="employee-list-container"  ng:dblclick="edit(selected)" >
                   <ul id="employee-list">
             
                       <li ng:class="(selected==employee && 'active') || ''" 
                           ng:repeat="employee in employees" 
-                          ng:click="select(employee)" 
-                          ng:dblclick="edit(employee)" > 
+                          ng:click="select(employee)" > 
               
                           {{ employee.firstName }} {{ employee.lastName }} 
                       </li>

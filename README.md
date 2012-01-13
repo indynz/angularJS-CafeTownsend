@@ -4,6 +4,21 @@ This project is an implementation of the infamous CafeTownsend application that 
 (Flash/Flex, and SpineJS HTML5) 
 
 
+Todos:
+
+*  Animation of Views
+*  Tests/Scenarios
+*  Use RequireJS loader
+*  Convert CSS to LESS
+*  Use Coffeescript
+*  Update Readme
+
+*  Understand compile process
+*  Understand template process
+*  Understand controller inheritance
+
+Uses angular.service.$exceptionHandler for global exception logging to the console.
+
 ## Directory Layout
 
     app/                --> all of the files to be used in production
