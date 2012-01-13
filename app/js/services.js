@@ -33,15 +33,15 @@
 angular.service( 'CafeTownsend', function( sessionService, $route, $location, $window, $log )  {
     $log.log('initializing CafeTownsend routes...');
     
-	var root = this;		// root scope
-	
+  var root = this;    // root scope
+  
     // Configure session model (for authentication) as root/parent scope for scopes created on route change.
     $route.parent( root.$new( CafeTownsend.Controllers.SessionController ) );
     
     // Configure template rendering based on routes
-    $route.when('/login',          { template: 'partials/login.html',         controller: CafeTownsend.Controllers.LoginController } );
-    $route.when('/employee',       { template: 'partials/employees.html',     controller: CafeTownsend.Controllers.EmployeeController } );
-    $route.when('/employee/:id',   { template: 'partials/employee_edit.html', controller: CafeTownsend.Controllers.EmployeeEditController } );
+    $route.when('/login',          { template: 'data/partials/login.html',         controller: CafeTownsend.Controllers.LoginController } );
+    $route.when('/employee',       { template: 'data/partials/employees.html',     controller: CafeTownsend.Controllers.EmployeeController } );
+    $route.when('/employee/:id',   { template: 'data/partials/employee_edit.html', controller: CafeTownsend.Controllers.EmployeeEditController } );
     $route.otherwise({ redirectTo: '/employee' });
         
     // Now listen for `#afterRouteChange` events
@@ -50,20 +50,20 @@ angular.service( 'CafeTownsend', function( sessionService, $route, $location, $w
       var user          = sessionService.session();
       var authenticated = ( user && user.authenticated );
       var view          = authenticated ? $location.path() : "";
-      	  
-	  	  // @TODO: use regular expression to match `/employee` or `/employee/<uuid>` paths only
-	  
-		  if ( view.indexOf( "/employee") > -1 ) 
-		  {
-			  // Either `/employee` or `/employee/<uuid>` is requested
-	          $window.scrollTo(0,0);        
-		  
-		  } else {
-		  
-	          // Must login before other views are available.
-	          $location.path( authenticated ? '/employee' : '/login' );
-		  }
-		  
+          
+        // @TODO: use regular expression to match `/employee` or `/employee/<uuid>` paths only
+    
+      if ( view.indexOf( "/employee") > -1 ) 
+      {
+        // Either `/employee` or `/employee/<uuid>` is requested
+            $window.scrollTo(0,0);        
+      
+      } else {
+      
+            // Must login before other views are available.
+            $location.path( authenticated ? '/employee' : '/login' );
+      }
+      
     });
     
 }, { $inject : ['sessionService', '$route', '$location', '$window', '$log' ], $eager  : true } );
@@ -113,92 +113,92 @@ angular.service('sessionService', function( $log )  {
  * 
  * Get list of all employees and current/selected employee
  */ 
-angular.service('employeeService', function( $log )  {
+angular.service('employeeService', function( $xhr, $log )  {
   $log.log('initializing Employee services...');
   
-	  // Create new employee record
-	  // NOTE: Here we define the properties of an `employee`
-	  function createEmployee() {    
-	    // Use the uuid::v1() to create time-based random UUID
-	    var employee = { 
-	            id        : uuid.v1(), 
-	            firstName : "", 
-	            lastName  : "",
-	            email     : "",
-	            startDate : '01/09/2012',
-				isNew     : true
-	        };
+    // Create new employee record
+    // NOTE: Here we define the properties of an `employee`
+    function createEmployee() {    
+      // Use the uuid::v1() to create time-based random UUID
+      var employee = { 
+              id        : uuid.v1(), 
+              firstName : "", 
+              lastName  : "",
+              email     : "",
+              startDate : '01/09/2012',
+              isNew     : true
+          };
         
-	        employees.push( employee );
+          employees.push( employee );
         
-	    return employee;
-	  }
+      return employee;
+    }
 
-	  // Load all known employees
-	  function loadEmployees() {
-		  if ( angular.isUndefined(employees) ) {
-		    employees = [{ 
-		                    id        : uuid.v1(), 
-		                    firstName : "Thomas", 
-		                    lastName  : "Burleson",
-		                    email     : "ThomasBurleson@Gmail.com",
-		                    startDate : '12/09/2011'
-		                }];
-		  }
-					
-		  return employees;
-	  }
+    // Load all known employees
+    function loadEmployees() {
+      
+      if ( angular.isUndefined(employees) ) {
+        employees = [ ];
+      
+        // Asynchronous GET for members.json
+        $xhr('GET', 'data/members.json', function(statusCode, members) {
+          employees = members;
+        });
+      }
+          
+      return employees;
+    }
 
-	  // Simulate save functionality...
-	  function saveEmployee( target ) {
-		  if ( angular.isDefined(target) )
-		  {
-			  // noop;
-		  }	  
-		  return target;
-	  }
+    // Simulate save functionality...
+    function saveEmployee( target ) {
+      
+      if ( angular.isDefined(target) ) {
+        // noop;
+      }    
+      return target;
+    }
   
-	  // Remove record by id (if found); return updated employees
-	  function deleteEmployee( target ) {
-		var id 		= angular.isString(target) ? target : target['id'],
-	    	buffer 	= [ ];
-		
-		angular.forEach( employees,  function(employee, key) {
-  	      if ( employee.id != id )
-  	      { 
-  	        buffer.push( it);
-  	      }
-		});
+    // Remove record by id (if found); return updated employees
+    function deleteEmployee( target ) {
+      var id     = angular.isString(target) ? target : target['id'],
+          buffer = [ ];
     
-	    return (employees = buffer);
-	  }
-	  
-	  // Select employee by ID
-	  function findEmployee( id ) {
-		var found = null;
-		
-  		angular.forEach( employees,  function(employee, key) {
-    	      if ( employee.id == id )
-    	      { 
-    	        found = employee;
-    	      }
-  		});
-		
-		return found;
-	  }
-	  
+      angular.forEach( employees,  function(employee, key) {
+            if ( employee.id != id )
+            { 
+              buffer.push( employee );
+            }
+      });
+    
+      return (employees = buffer);
+    }
+    
+    // Select employee by ID
+    function findEmployee( id ) {
+      var found = null;
+    
+      angular.forEach( employees,  function(employee, key) {
+          if ( employee.id == id )
+          { 
+            found = employee;
+          }
+      });
+    
+      return found;
+    }
+    
   // Auto-load employees
   var employees = loadEmployees();
     
   // Expose service CRUD functions
   return {
       selected  : null,
-	  findByID  : function(id)  { return findEmployee(id);	},
-      loadAll   : function()   	{ return loadEmployees();       },
-	  save      : function(who) { return saveEmployee( who );	},
-      create	: function()   	{ return createEmployee();    	},
+      findByID  : function(id)  { return findEmployee(id);  },
+      loadAll   : function()     { return loadEmployees();       },
+      save      : function(who) { return saveEmployee( who );  },
+      create    : function()     { return createEmployee();      },
       delete    : function(who) { return deleteEmployee( who ); }
-    };
+  };
 
-}, { $inject : [ '$log' ], $eager  : false } );
+}, { $inject : [ '$xhr', '$log' ], $eager  : false } );
 

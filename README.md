@@ -1,31 +1,72 @@
 # CafeTownsend - AngularJS
 
-This project is an implementation of the infamous CafeTownsend application that uses the AngularJS IoC MVVM framework. 
-(Flash/Flex, and SpineJS HTML5) 
+<br/>
+This project is an HTML5 implementation of the infamous CafeTownsend application. Cafe Townsend is a well known application to demonstrate any MVC framework for using Flex or ActionScript. There are already ports of Cairngorm, Mate, PureMVC, Spring ActionScript, RobotLegs and now Swiz. 
+
+Recently a developer contributed an HTML5/Javascript port of the application using in the [SpineJS MVC Framework](http://spinejs.com/). 
+
+*  [CafeTownsend - Javascript with AngularJS Ioc]()      … blog pending.
+*  [CafeTownsend - Javascript with SpineJS MVC](http://www.websector.de/blog/2011/12/31/spine-js-cafe-townsend-example/)
+*  [CafeTownsend - Flex with Swiz IoC](http://www.gridlinked.info/swiz-localization-l10n-logging/)
+*  [CafeTownsend - Flex with Mate MVC](http://www.websector.de/blog/2010/03/12/mate-cafe-townsend-example-updated-for-using-flex-4/)
 
 
-Todos:
 
-*  Animation of Views
-*  Tests/Scenarios
-*  Use RequireJS loader
-*  Convert CSS to LESS
+---
+
+AngularJS is an amazing IoC MVC framework for Javascript applications. Supporting pageless architectures, advanced data binding, HTML tempting, and dependency injection… AngularJS is strikingly similar to the Flex [Swiz IoC framework](http://swizframework.org/).
+
+This project contributes an [**Angular.js**](http://angularjs.org/) port of the CafeTownsend application.
+CafeTownsend - AngularJS is written in CoffeeScript and uses the [Angular.js](http://angularjs.org/) IoC framework. It uses Mustache for HTML templating and [{Less}](http://lesscss.org/) for dynamic stylesheet language support. 
+
+The AngularJS port also demonstrates significant advantages over the SpineJS implementation:
+
+*  Pageless Architecture
+*  Improved routing with `deep link` support
+*  Significant reduction in HTML template fragments
+*  Rigorous elimination of Javascript code from HTML 
+*  Inter-controller data sharing
+*  Session Management/Authentication
+*  Lazy loading of data services (*with auto-jsonify of external JSON data*)
+*  Code versions handwritten in both Javascript and Coffeescript 
+*  Demonstrates `separation-of-concerns` for Model-Views-Controllers
+*  Demonstates `dependency injection` for services and Controllers
+*  Demonstrates best practices for `Model-View-View-Model (MVVM)` architectures
+
+## Todo
+
+This effort is still ongoing with some in-progress effort that will provide the following features:
+
+*  Provide `loading indicator` as startup screen
+*  Support deep linking with synch data loads
+*  Convert disorganized CSS to LESS
 *  Use Coffeescript
-*  Update Readme
+*  Build CafeTownsend Tests/Scenarios
+*  Create view slide transitions 
+*  Use AMD loader
 
-*  Understand compile process
-*  Understand template process
-*  Understand controller inheritance
 
-Uses angular.service.$exceptionHandler for global exception logging to the console.
 
 ## Directory Layout
 
-    app/                --> all of the files to be used in production
-      css/              --> css files
-        app.css         --> default stylesheet
-      img/              --> image files
-      index.html        --> app layout file (the main html template file of the app)
+    app/                  --> all of the files to be used in production
+
+      index.html          --> app layout file (the main html template file of the app)
+
+	  data/
+
+        css/              --> css files
+          app.css         --> default stylesheet
+
+        images/           --> image files
+
+        partials/         --> angular view partials (partial html templates)
+          login.html
+          employees.html
+          employee_edit.html
+
+        members.json      --> external, simple JSON data 
+
       js/               --> javascript files
         controllers.js  --> application controllers
         filters.js      --> custom angular filters
@@ -37,9 +78,6 @@ Uses angular.service.$exceptionHandler for global exception logging to the conso
           angular.min.js        --> the latest minified angular js
           angular-ie-compat.js  --> angular patch for IE 6&7 compatibility
           version.txt           --> version number
-      partials/         --> angular view partials (partial html templates)
-        partial1.html
-        partial2.html
 
     config/jsTestDriver.conf    --> config file for JsTestDriver
 

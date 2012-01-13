@@ -39,7 +39,7 @@ ul {
   box-shadow: 0 0 15px #888;
   width: 480px;
   min-height: 400px;
-  background: #aeaeae url("/images/header.png") no-repeat top left;
+  background: #aeaeae url("/data/images/header.png") no-repeat top left;
   padding-top: 110px;
   border: 10px solid #019934;
 }
@@ -135,11 +135,11 @@ form input:focus {
   box-shadow: 0 0 3px #aaa;
 }
 form input:focus:invalid {
-  background: #fff url("/images/invalid.png") no-repeat 98% center !important;
+  background: #fff url("/data/images/invalid.png") no-repeat 98% center !important;
   border-color: #f36;
 }
 form input:required:valid {
-  background: #fff url("/images/valid.png") no-repeat 98% center;
+  background: #fff url("/data/images/valid.png") no-repeat 98% center;
 }
 form div.formFooter {
   display: -webkit-box;
@@ -180,9 +180,9 @@ fieldset {
 }
 #login-form p {
   padding-left: 100px;
-  padding-top: 10px;
+  padding-top: 0px;
   font-size: 13px;
-  color: #aaa;
+  color: #666;
 }
 .main-button {
   -webkit-box-sizing: border-box;
@@ -286,7 +286,7 @@ div.employee-edit {
   transition: background-color 0.5s linear;
 }
 #employee-list li:hover {
-  background-color: #ab8871;
+  background-color: #d1a88e;
   color: #fff;
 }
 #employee-list li.active {
