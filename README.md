@@ -1,9 +1,9 @@
 # CafeTownsend - AngularJS
 
 <br/>
-This project is an HTML5 implementation of the infamous CafeTownsend application. Cafe Townsend is a well known application to demonstrate any MVC framework for using Flex or ActionScript. There are already ports of Cairngorm, Mate, PureMVC, Spring ActionScript, RobotLegs and now Swiz. 
+This project is an HTML5/Javascript implementation of the infamous CafeTownsend application. CafeTownsend is a well known application created to demonstrate various MVC frameworks using Flex or ActionScript. There are known ports using Cairngorm, Mate, PureMVC, Spring ActionScript, RobotLegs and Swiz. 
 
-Recently a developer contributed an HTML5/Javascript port of the application using in the [SpineJS MVC Framework](http://spinejs.com/). 
+Recently a developer contributed an HTML5 port of the application using the javascript [Spine](http://spinejs.com/) MVC framework. 
 
 *  [CafeTownsend - Javascript with AngularJS Ioc]()      … blog pending.
 *  [CafeTownsend - Javascript with SpineJS MVC](http://www.websector.de/blog/2011/12/31/spine-js-cafe-townsend-example/)
@@ -11,17 +11,18 @@ Recently a developer contributed an HTML5/Javascript port of the application usi
 *  [CafeTownsend - Flex with Mate MVC](http://www.websector.de/blog/2010/03/12/mate-cafe-townsend-example-updated-for-using-flex-4/)
 
 
+This project contributes a superior port of the HTML5 CafeTownsend application;using the [Angular.js IoC](http://angularjs.org/) framework.
 
----
-
-AngularJS is an amazing IoC MVC framework for Javascript applications. Supporting pageless architectures, advanced data binding, HTML tempting, and dependency injection… AngularJS is strikingly similar to the Flex [Swiz IoC framework](http://swizframework.org/).
-
-This project contributes an [**Angular.js**](http://angularjs.org/) port of the CafeTownsend application.
-CafeTownsend - AngularJS is written in CoffeeScript and uses the [Angular.js](http://angularjs.org/) IoC framework. It uses Mustache for HTML templating and [{Less}](http://lesscss.org/) for dynamic stylesheet language support. 
 
 ![Screenshot](https://github.com/ThomasBurleson/angularJS-CafeTownsend/raw/master/app/data/images/screens.png)
 <br/>
 
+---
+
+AngularJS is an amazing IoC MVVM framework for Javascript applications. Supporting pageless architectures, advanced data binding, HTML tempting, and dependency injection… AngularJS is strikingly similar to the Flex [Swiz IoC framework](http://swizframework.org/).
+
+
+Note: Subsequent version will be rewritten in [CoffeeScript](http://coffeescript.org/) and [{Less}](http://lesscss.org/) for dynamic stylesheet language support. <br/>
 The AngularJS port also demonstrates significant advantages over the SpineJS implementation:
 
 *  Pageless Architecture
@@ -35,7 +36,6 @@ The AngularJS port also demonstrates significant advantages over the SpineJS imp
 *  Demonstrates `separation-of-concerns` for Model-Views-Controllers
 *  Demonstates `dependency injection` for services and Controllers
 *  Demonstrates best practices for `Model-View-View-Model (MVVM)` architectures
-<br/>
 
 
 
