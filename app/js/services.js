@@ -207,5 +207,5 @@ angular.service('employeeService', function( $xhr, $log )  {
       delete    : function(who) { return deleteEmployee( who ); }
   };
 
-}, { $inject : [ '$xhr', '$log' ], $eager  : false } );
+}, { $inject : [ '$xhr', '$log' ], $eager  : true } );
 
