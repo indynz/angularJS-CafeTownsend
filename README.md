@@ -16,13 +16,13 @@ This project contributes a superior port of the HTML5 CafeTownsend application;u
 
 ![Screenshot](https://github.com/ThomasBurleson/angularJS-CafeTownsend/raw/master/app/data/images/screens.png)<br/>
 
-Click to play with the live [CafeTownsend Demo](http://www.gridlinked.info/demos/cafetownsend/index.html).
+Click to play with the live [CafeTownsend Demo](http://thomasburleson.github.com/cafetownsend/index.html).
 
 
 
 ---
 
-AngularJS is an amazing IoC MVVM framework for Javascript applications. Supporting pageless architectures, advanced data binding, HTML tempting, and dependency injection… AngularJS is strikingly similar to the Flex [Swiz IoC framework](http://swizframework.org/).
+AngularJS is an amazing IoC MVVM framework for Javascript applications. Supporting pageless architectures, advanced data binding, HTML templating, and dependency injection… AngularJS is strikingly similar to the Flex [Swiz IoC framework](http://swizframework.org/).
 
 
 Note: Subsequent version will be rewritten in [CoffeeScript](http://coffeescript.org/) and [{Less}](http://lesscss.org/) for dynamic stylesheet language support. <br/>
@@ -107,7 +107,7 @@ The AngularJS port also demonstrates significant advantages over the SpineJS imp
 
 This effort is still ongoing with some in-progress effort that will provide the following features:
 
-*  Provide `loading indicator` as startup screen
+*  Provide `loading indicator` as startup screen and data load indicator
 *  Support deep linking with synch data loads
 *  Convert disorganized CSS to LESS
 *  Use Coffeescript
@@ -117,6 +117,6 @@ This effort is still ongoing with some in-progress effort that will provide the 
 
 ## Contact
 
-Stay tuned for upcoming blog article and video on [GridLinked.info](www.gridlinked.info)<br/>
+Stay tuned for upcoming blog article and video on the [GridLinked](http://www.gridlinked.info) blog.<br/>
 For more information on angular please check out http://angularjs.org/
 

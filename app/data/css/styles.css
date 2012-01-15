@@ -175,6 +175,14 @@ legend {
 fieldset {
   border: none;
 }
+
+div.login {
+	background: #AEAEAE url("../images/brushed_alu2.png") repeat top left;
+	display: block;
+	height: 300px;
+	overflow: hidden;
+}
+
 #login-form {
   margin-top: 10px;
 }
@@ -221,7 +229,7 @@ fieldset {
 }
 
 div.employee-edit {
-	background-color: #f4f4f4;
+	  background: #f4f4f4 url("../images/parchment.gif") repeat top left;
 }
 .disabledButton {
   display: block;
@@ -272,9 +280,9 @@ div.employee-edit {
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b8e1fc', endColorstr='#bdf3fd',GradientType=0 ); /* IE6-9 */  
 }
 #employee-list-container {
+  background: #f4f4f4 url("../images/parchment.gif") repeat top left;
   overflow-y: auto;
   height: 340px;
-  background: #f4f4f4;
 }
 #employee-list {
   width: 100%;
@@ -304,7 +312,7 @@ div.employee-edit {
   -moz-box-pack: start;
   height: 60px;
   width: 100%;
-  background-color: #aeaeae;
+  	background: #AEAEAE url("../images/brushed_alu2.png") repeat top left;
   border-bottom: 1px solid #333;
   -moz-box-shadow: 0 0 15px #888;
   -webkit-box-shadow: 0 0 15px #888;
