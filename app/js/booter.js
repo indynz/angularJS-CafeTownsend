@@ -8,5 +8,22 @@
 *
 */
 
-var CafeTownsend = { };
-    CafeTownsend.Controllers = { };
+head.js ( 
+	
+	{ jquery: 		"http://code.jquery.com/jquery-1.7.1.min.js" 	},
+	{ angular: 		"js/lib/angular.js#autobind" 					},
+	{ uuid: 		"js/lib/uuid.js" 								},
+	
+	{ services: 	"js/services.js" 			},
+	{ controllers: 	"js/controllers.js" 		},
+	{ directives: 	"js/directives.js" 			}
+);
+
+head.ready( "angular", function() {
+	
+	// Configure module variables...
+	
+	window.CafeTownsend  			= { };
+		   CafeTownsend.Controllers = { };
+	
+});

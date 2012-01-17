@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-var sys = require('sys'),
+var sys = require('util'),
     http = require('http'),
     fs = require('fs'),
     url = require('url'),
@@ -81,25 +81,35 @@ StaticServlet.MimeMap = {
   'jpg': 'image/jpeg',
   'jpeg': 'image/jpeg',
   'gif': 'image/gif',
-  'png': 'image/png'
+  'png': 'image/png',
+  'manifest': 'text/cache-manifest'
 };
 
 StaticServlet.prototype.handleRequest = function(req, res) {
   var self = this;
-  var path = ('./' + req.url.pathname).replace('//','/').replace(/%(..)/, function(match, hex){
+  var path = ('./' + req.url.pathname).replace('//','/').replace(/%(..)/g, function(match, hex){
     return String.fromCharCode(parseInt(hex, 16));
   });
   var parts = path.split('/');
   if (parts[parts.length-1].charAt(0) === '.')
     return self.sendForbidden_(req, res, path);
+
   fs.stat(path, function(err, stat) {
     if (err)
       return self.sendMissing_(req, res, path);
     if (stat.isDirectory())
+      return fs.stat(path + 'index.html', function(err, stat) {
+        // send index.html if exists
+        if (!err)
+          return self.sendFile_(req, res, path + 'index.html');
+
+        // list files otherwise
       return self.sendDirectory_(req, res, path);
+      });
+
     return self.sendFile_(req, res, path);
   });
-}
+};
 
 StaticServlet.prototype.sendError_ = function(req, res, error) {
   res.writeHead(500, {
@@ -160,7 +170,7 @@ StaticServlet.prototype.sendRedirect_ = function(req, res, redirectUrl) {
     '">here</a>.</p>'
   );
   res.end();
-  sys.puts('301 Moved Permanently: ' + redirectUrl);
+  sys.puts('401 Moved Permanently: ' + redirectUrl);
 };
 
 StaticServlet.prototype.sendFile_ = function(req, res, path) {
