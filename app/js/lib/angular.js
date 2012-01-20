@@ -2242,6 +2242,16 @@ function createInjector(factoryScope, factories, instanceCache) {
       var factory = factories[value];
       if (!factory) throw Error("Unknown provider for '"+value+"'.");
       inferInjectionArgs(factory);
+
+      /**
+       * Bug Fix - ThomasBurleson
+       * Bind prototoype methods for $service
+       */
+      var factoryPrototype = factory.prototype;
+      for(var key in factoryPrototype) {
+        factoryScope[key] = bind(factoryScope, factoryPrototype[key]);
+      }
+
       instanceCache[value] = invoke(factoryScope, factory);
     }
     return instanceCache[value];

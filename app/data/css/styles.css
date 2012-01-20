@@ -243,7 +243,7 @@ div.login {
 }
 
 div.employee-edit {
-	  background: #f4f4f4 url("../images/parchment.gif") repeat top left;
+	  background: #f4f4f4 url("../images/bg.png") repeat top left;
 }
 .disabledButton {
   display: block;
@@ -294,7 +294,7 @@ div.employee-edit {
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b8e1fc', endColorstr='#bdf3fd',GradientType=0 ); /* IE6-9 */  
 }
 #employee-list-container {
-  background: #f4f4f4 url("../images/parchment.gif") repeat top left;
+  background: #f4f4f4 url("../images/bg.png") repeat top left;
   overflow-y: auto;
   height: 340px;
 }

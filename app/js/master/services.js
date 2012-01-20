@@ -204,7 +204,7 @@ angular.service('employeeService', function( $xhr, $log )  {
       loadAll   : function()     { return loadEmployees();       },
       save      : function(who) { return saveEmployee( who );  },
       create    : function()     { return createEmployee();      },
-      delete    : function(who) { return deleteEmployee( who ); }
+      terminate : function(who) { return deleteEmployee( who ); }
   };
 
 }, { $inject : [ '$xhr', '$log' ], $eager  : true } );

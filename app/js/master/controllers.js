@@ -96,7 +96,7 @@ CafeTownsend.Controllers.EmployeeController = function ( session, delegate, $loc
   scope.remove    = function ( employee ) {
     if ( angular.isUndefined(employee) ) return;
     
-    scope.employees = delegate.delete( employee );
+    scope.employees = delegate.terminate( employee );
     scope.selected  = (delegate.selected = null);
   };
 
@@ -113,7 +113,7 @@ CafeTownsend.Controllers.EmployeeController = function ( session, delegate, $loc
 	$location.path( '/employee/'+employee.id );
   };
   
-}
+};
 CafeTownsend.Controllers.EmployeeController.$inject = [ 'sessionService', 'employeeService', '$location' ];
 
 
@@ -160,7 +160,7 @@ CafeTownsend.Controllers.EmployeeEditController = function ( delegate, $routePar
      {
        // If cancelling a new record... be sure to 
        // auto-remove it from our list also
-       delegate.delete( scope.employee.id );
+       delegate.terminate( scope.employee.id );
        delegate.selected = null;    
        
        scope.employee     = null;
@@ -171,7 +171,7 @@ CafeTownsend.Controllers.EmployeeEditController = function ( delegate, $routePar
 
   // 3) Delete current employee
   scope.remove    = function ( ) {    
-    delegate.delete( scope.employee.id );
+    delegate.terminate( scope.employee.id );
 
     delegate.selected = null;    
     scope.employee     = null;
@@ -180,4 +180,5 @@ CafeTownsend.Controllers.EmployeeEditController = function ( delegate, $routePar
   };
 
 }
+
 CafeTownsend.Controllers.EmployeeEditController.$inject = [ 'employeeService', '$routeParams', '$location' ];
