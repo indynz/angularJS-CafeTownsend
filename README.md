@@ -25,7 +25,7 @@ Click to play with the live [CafeTownsend Demo](http://thomasburleson.github.com
 AngularJS is an amazing IoC MVVM framework for Javascript applications. Supporting pageless architectures, advanced data binding, HTML templating, and dependency injection… AngularJS is strikingly similar to the Flex [Swiz IoC framework](http://swizframework.org/).
 
 
-Note: Subsequent version will be rewritten in [CoffeeScript](http://coffeescript.org/) and [{Less}](http://lesscss.org/) for dynamic stylesheet language support. <br/>
+Note: Subsequent CSS version will be rewritten in [{Less}](http://lesscss.org/) for dynamic stylesheet language support. <br/>
 The AngularJS port also demonstrates significant advantages over the SpineJS implementation:
 
 *  Pageless Architecture
@@ -39,6 +39,7 @@ The AngularJS port also demonstrates significant advantages over the SpineJS imp
 *  Demonstrates `separation-of-concerns` for Model-Views-Controllers
 *  Demonstates `dependency injection` for services and Controllers
 *  Demonstrates best practices for `Model-View-View-Model (MVVM)` architectures
+*  Uses [CoffeeScript](http://coffeescript.org/) files for services and controller classes
 
 
 
@@ -62,15 +63,26 @@ The AngularJS port also demonstrates significant advantages over the SpineJS imp
 
         members.json      --> external, simple JSON data 
 
+	  coffee/			  --> master developer files for service & controller classes
+
+       	controllers.coffee    --> application controllers
+       	services.coffee       --> custom angular services
+       	directives.coffee     --> custom angular directives
+
       js/                 --> javascript files
 		booter.js		  --> application booter
-        controllers.js    --> application controllers
-        services.js       --> custom angular services
-        directives.js     --> custom angular directives
+
+		/master           --> original, handwritten javascript files
+		/build            --> javascript output from CoffeeScript builds
+          
+        	controllers.js    --> application controllers
+        	services.js       --> custom angular services
+        	directives.js     --> custom angular directives
 
         lib/              --> angular and 3rd party javascript libraries
-            angular.js      --> the latest angular js
+            angular.js      --> AngularJS v0.10.5 IoC Framework
 			jquery.min.js   --> jQuery v1.7 minified
+			head.js         --> asynch script loader
 			uuid.js			--> uuid generator
 
     config/jsTestDriver.conf    --> config file for JsTestDriver
@@ -107,13 +119,11 @@ The AngularJS port also demonstrates significant advantages over the SpineJS imp
 
 This effort is still ongoing with some in-progress effort that will provide the following features:
 
-*  Provide `loading indicator` as startup screen and data load indicator
+*  Provide `loading indicator` as data load indicator
 *  Support deep linking with synch data loads
 *  Convert disorganized CSS to LESS
-*  Use Coffeescript
 *  Build CafeTownsend Tests/Scenarios
 *  Create view slide transitions 
-*  Use AMD loader
 
 ## Contact
 
