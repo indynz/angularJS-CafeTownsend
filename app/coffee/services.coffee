@@ -1,4 +1,4 @@
-# *
+#
 # ******************************************************************************************************
 #   AngularJS - CafeTownsend
 # ******************************************************************************************************
@@ -39,28 +39,25 @@
 # 
 # ********************************************
 
-class InitializationServices
+class CafeTownsend
 
-  constructor : (@sessionService, $route, @$location, $log, @$window) ->
+  constructor : (@sessionService, $route, @$location, $log, @$window, $rootScope) ->
     $log.log( "initializing CafeTownsend routes..." )
     
     # Configure template rendering based on routes
     $route.when "/login",
       template: "data/partials/login.html"
       controller: CafeTownsend.Controllers.LoginController
-
     $route.when "/employee",
       template: "data/partials/employees.html"
       controller: CafeTownsend.Controllers.EmployeeController
-    
     $route.when "/employee/:id",
       template: "data/partials/employee_edit.html"
       controller: CafeTownsend.Controllers.EmployeeEditController
-
     $route.otherwise( redirectTo: "/employee" )
     
     # Now listen for `#afterRouteChange` events
-    @$on "$afterRouteChange", (current, previous) =>
+    $rootScope.$on "$afterRouteChange", (current, previous) =>
       user          = @sessionService.session
       authenticated = (user and user.authenticated)
       
@@ -88,18 +85,19 @@ class InitializationServices
 class SessionServices
   constructor : ( $log ) ->
     $log.log( "initializing Session services..." )
-  
     @session = 
       userName      : "<your email>"
       password      : ""
       authenticated : false      
-
     return this
 
   logout : ->
     @session.authenticated = false
     return
-    
+   
+# Specify expected constructor services
+SessionServices.$inject   = [ "$log" ]
+ 
     
 # ********************************************
 # Employees CRUD Service:  
@@ -107,19 +105,26 @@ class SessionServices
 # Get list of all employees and current/selected employee
 # ********************************************
 
-class EmployeeServices
+class EmployeeManager
   
-  constructor : (@$xhr, $log) ->
+  constructor : (@$http, @$q, $log) ->
     $log.log "initializing Employee services..."
-
-    @employees = [ ]  # @loadEmployees()  
+    @list      = [ ]
+    @selected  = null  
+    @cache     = @loadEmployees()
     return this
 
   # Load all known employees
-  loadEmployees : ->
-    @$xhr "GET", "data/members.json", (statusCode, members) =>
-      @employees = members      
-    (@employees || []) 
+  loadEmployees : ->        
+    if !@cache
+      @cache = @$http
+        .get( "data/members.json" )
+        .success (members, statusCode, headers, config) => 
+          @list = members
+    # always return a new promise
+    return @cache.then( (members) ->
+      return members
+    )
 
   createEmployee : ->
     person = 
@@ -129,45 +134,59 @@ class EmployeeServices
       email     : ""
       startDate : "01/09/2012"
       isNew     : true
-    
-    @employees.push( person )
-    person  
+    @saveEmployee(person)
 
   # Simulate save functionality...
   saveEmployee : (target) ->
-    target
+    if target?
+      target.isNew = true
+      @list.push( target ) if !@findEmployee( target.id )        
+    return target
     
   # Remove record by id (if found); return updated employees
   deleteEmployee : (target) ->
     id     = (if angular.isString(target) then target else target["id"])
     buffer = [ ]
-    angular.forEach @employees, (employee, key) ->
+    angular.forEach @list, (employee, key) ->
       buffer.push employee unless employee.id is id
       employee
-    (@employees = buffer)
+    (@list = buffer)
     
   # Select employee by ID  
-  findEmployee : (id) ->
+  findEmployee : (id) ->    
     found = null
-    angular.forEach @employees, (employee, key) ->
-      found ||= employee  if employee.id is id
-    found
+    angular.forEach @list, (employee, key) ->
+      found = employee  if employee.id is id
+    return found
+    
+# Specify expected constructor services
+EmployeeManager.$inject  = [ "$http", '$q', "$log" ]
 
 
 
 
 # **************************************************************
-# Register singleton services with Angular Dependency Injector     
+# Register Modules & singleton services with Angular DI system     
 # **************************************************************
 
-angular.service "initializationServices", InitializationServices,
-  $inject: [ "sessionServices", "$route", "$location", "$log", "$window" ]
-  $eager: true
-  
-angular.service "sessionServices", SessionServices, 
-  $inject : [ "$log" ]
-  $eager  : true
 
-angular.service "employeeServices", EmployeeServices, 
-  $inject : [ "$xhr", "$log" ]
-  $eager  : false
+
+# Declare app-level module which depends on filters, and services
+angular
+  .module( 'CafeTownsend', [ ] )
+  .service( "sessionServices", ->
+    # Register a provider for a SessionServices; requires $log
+    @$get = ['$log',( ($log) ->
+      new SessionServices( $log )
+    )]
+    return
+  )
+  .service( "employeeManager", ->
+    # Register a provider for an EmployeeManager; requires $http & $log
+    @$get = [ '$http', '$q', '$log',( ($http, $q, $log) ->
+      new EmployeeManager( $http, $q, $log )
+    )]
+    return
+  )
+  .run([ "sessionServices", "$route", "$location", "$log", "$window", '$rootScope', CafeTownsend ])
+

@@ -87,33 +87,29 @@ class LoginController
 
 class EmployeeController 
   
-  constructor : ( @delegate, @$location ) ->
-    @employees = @delegate.loadEmployees()
-    @selected  = @delegate.selected
+  constructor : ( delegate, @$location ) ->
+    @employees = delegate
     return this
   
   # 1) Create a new employee and show in editor
   addNew : ->
-    @edit( @delegate.createEmployee() )
+    @edit( @employees.createEmployee() )
     return
 
   # 2) Delete selected employee
   remove  : (employee) ->
     return if angular.isUndefined( employee )
-    
-    @employees = @delegate.deleteEmployee( employee )
-    @selected = (@delegate.selected = null)
-    employee
+    @employees.deleteEmployee( employee )
+    @employees.selected = null
+    return
 
   # 3) Select employee as `current`
   select : (employee) ->
-    @selected = (@delegate.selected = employee)
-    @selected
+    (@employees.selected = employee)
 
   # 4) Edit specified employee in editor view
   edit : (employee) ->
-    return  if angular.isUndefined( employee )
-    
+    return if !employee
     @select( employee )
     @$location.path( "/employee/" + employee.id )
     @selected
@@ -131,28 +127,24 @@ class EmployeeController
 class EmployeeEditController 
   
   constructor : (@delegate, $routeParams, @$location) ->  
-    @delegate.selected  = @delegate.findEmployee( $routeParams.id )  if angular.isDefined( $routeParams.id )
-    @employee           = angular.Object.copy( @delegate.selected, {} )
-    @isEditing          = @employee.isNew or false
+    id          = $routeParams?.id || @delegate.selected?.id
+    @employee   = @delegate.findEmployee( id )
+    @isEditing  = @employee.isNew or false
     return this
 
   # 1) Save updated employee information & return to employee list
-  save : ->
-    angular.Object.copy( @employee, @delegate.selected  if @employee? )
-    if @selected?
-      delete @delegate.selected.isNew
-
-    @delegate.saveEmployee( @delegate.selected )
+  save : (employee) ->
+    @delegate.saveEmployee( employee )
+    @selected = ( @delegate.selected = employee )
+    @selected.isNew = false
     @$location.path( "/employee" )
-    @selected
 
   # 2) Cancel edits for current employee
   cancel : ->
     if @isEditing
-      @delegate.deleteEmployee( @employee )
+      @delegate.deleteEmployee( @employee ) 
       @delegate.selected  = null
       @employee           = null
-      
     @$location.path( "/employee" )
     return
 
@@ -161,7 +153,6 @@ class EmployeeEditController
     @delegate.deleteEmployee( @employee )
     @delegate.selected  = null
     @employee           = null
-    
     @$location.path( "/employee" )
     return
   
@@ -171,6 +162,8 @@ class EmployeeEditController
 # Register Controllers with Angular Dependency Injector 
 # ******************************************************
 
+CafeTownsend.Controllers = { }
+
 CafeTownsend.Controllers.SessionController              = SessionController
 CafeTownsend.Controllers.SessionController.$inject      = [ "sessionServices", "$location", "$route" ]
 
@@ -178,7 +171,7 @@ CafeTownsend.Controllers.LoginController                = LoginController
 CafeTownsend.Controllers.LoginController.$inject        = [ "sessionServices", "$location" ]
 
 CafeTownsend.Controllers.EmployeeController             = EmployeeController
-CafeTownsend.Controllers.EmployeeController.$inject     = [ "employeeServices", "$location" ]
+CafeTownsend.Controllers.EmployeeController.$inject     = [ "employeeManager", "$location" ]
 
 CafeTownsend.Controllers.EmployeeEditController         = EmployeeEditController
-CafeTownsend.Controllers.EmployeeEditController.$inject = [ "employeeServices", "$routeParams", "$location" ]
+CafeTownsend.Controllers.EmployeeEditController.$inject = [ "employeeManager", "$routeParams", "$location" ]

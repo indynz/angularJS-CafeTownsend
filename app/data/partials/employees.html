@@ -13,28 +13,28 @@
                   </li>
                   <li>
                       <a  id="bEdit" 
-                          ng:show="selected != null"
-                          ng:class="(selected && 'subButton') || 'disabledButton'"
-                          ng:click="edit(selected)" 
+                          ng:show="employees.selected != null"
+                          ng:class="(employees.selected && 'subButton') || 'disabledButton'"
+                          ng:click="edit(employees.selected)" 
                           name="bEdit">
                         Edit
                       </a>
                   </li>
                   <li>
                       <a  id="bDelete" 
-                          ng:show="selected != null"
-                          ng:class="(selected && 'subButton') || 'disabledButton'" 
-                          ng:click="remove(selected)"
+                          ng:show="employees.selected != null"
+                          ng:class="(employees.selected && 'subButton') || 'disabledButton'" 
+                          ng:click="remove(employees.selected)"
                           name="bDelete">
                         Delete
                       </a>
                   </li>
               </ul>
-              <div id="employee-list-container"  ng:dblclick="edit(selected)" >
+              <div id="employee-list-container"  ng:dblclick="edit(employees.selected)" >
                   <ul id="employee-list">
             
-                      <li ng:class="(selected==employee && 'active') || ''" 
-                          ng:repeat="employee in employees" 
+                      <li ng:class="(employees.selected==employee && 'active') || ''" 
+                          ng:repeat="employee in employees.list" 
                           ng:click="select(employee)" > 
               
                           {{ employee.firstName }} {{ employee.lastName }} 

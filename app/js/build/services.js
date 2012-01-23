@@ -1,8 +1,8 @@
-var EmployeeServices, InitializationServices, SessionServices;
+var CafeTownsend, EmployeeManager, SessionServices;
 
-InitializationServices = (function() {
+CafeTownsend = (function() {
 
-  function InitializationServices(sessionService, $route, $location, $log, $window) {
+  function CafeTownsend(sessionService, $route, $location, $log, $window, $rootScope) {
     var _this = this;
     this.sessionService = sessionService;
     this.$location = $location;
@@ -23,7 +23,7 @@ InitializationServices = (function() {
     $route.otherwise({
       redirectTo: "/employee"
     });
-    this.$on("$afterRouteChange", function(current, previous) {
+    $rootScope.$on("$afterRouteChange", function(current, previous) {
       var authenticated, user, view;
       user = _this.sessionService.session;
       authenticated = user && user.authenticated;
@@ -38,7 +38,7 @@ InitializationServices = (function() {
     return this;
   }
 
-  return InitializationServices;
+  return CafeTownsend;
 
 })();
 
@@ -62,24 +62,33 @@ SessionServices = (function() {
 
 })();
 
-EmployeeServices = (function() {
+SessionServices.$inject = ["$log"];
 
-  function EmployeeServices($xhr, $log) {
-    this.$xhr = $xhr;
+EmployeeManager = (function() {
+
+  function EmployeeManager($http, $q, $log) {
+    this.$http = $http;
+    this.$q = $q;
     $log.log("initializing Employee services...");
-    this.employees = [];
+    this.list = [];
+    this.selected = null;
+    this.cache = this.loadEmployees();
     return this;
   }
 
-  EmployeeServices.prototype.loadEmployees = function() {
+  EmployeeManager.prototype.loadEmployees = function() {
     var _this = this;
-    this.$xhr("GET", "data/members.json", function(statusCode, members) {
-      return _this.employees = members;
+    if (!this.cache) {
+      this.cache = this.$http.get("data/members.json").success(function(members, statusCode, headers, config) {
+        return _this.list = members;
+      });
+    }
+    return this.cache.then(function(members) {
+      return members;
     });
-    return this.employees || [];
   };
 
-  EmployeeServices.prototype.createEmployee = function() {
+  EmployeeManager.prototype.createEmployee = function() {
     var person;
     person = {
       id: uuid.v1(),
@@ -89,49 +98,53 @@ EmployeeServices = (function() {
       startDate: "01/09/2012",
       isNew: true
     };
-    this.employees.push(person);
-    return person;
+    return this.saveEmployee(person);
   };
 
-  EmployeeServices.prototype.saveEmployee = function(target) {
+  EmployeeManager.prototype.saveEmployee = function(target) {
+    if (target != null) {
+      target.isNew = true;
+      if (!this.findEmployee(target.id)) this.list.push(target);
+    }
     return target;
   };
 
-  EmployeeServices.prototype.deleteEmployee = function(target) {
+  EmployeeManager.prototype.deleteEmployee = function(target) {
     var buffer, id;
     id = (angular.isString(target) ? target : target["id"]);
     buffer = [];
-    angular.forEach(this.employees, function(employee, key) {
+    angular.forEach(this.list, function(employee, key) {
       if (employee.id !== id) buffer.push(employee);
       return employee;
     });
-    return this.employees = buffer;
+    return this.list = buffer;
   };
 
-  EmployeeServices.prototype.findEmployee = function(id) {
+  EmployeeManager.prototype.findEmployee = function(id) {
     var found;
     found = null;
-    angular.forEach(this.employees, function(employee, key) {
-      if (employee.id === id) return found || (found = employee);
+    angular.forEach(this.list, function(employee, key) {
+      if (employee.id === id) return found = employee;
     });
     return found;
   };
 
-  return EmployeeServices;
+  return EmployeeManager;
 
 })();
 
-angular.service("initializationServices", InitializationServices, {
-  $inject: ["sessionServices", "$route", "$location", "$log", "$window"],
-  $eager: true
-});
+EmployeeManager.$inject = ["$http", '$q', "$log"];
 
-angular.service("sessionServices", SessionServices, {
-  $inject: ["$log"],
-  $eager: true
-});
-
-angular.service("employeeServices", EmployeeServices, {
-  $inject: ["$xhr", "$log"],
-  $eager: false
-});
+angular.module('CafeTownsend', []).service("sessionServices", function() {
+  this.$get = [
+    '$log', (function($log) {
+      return new SessionServices($log);
+    })
+  ];
+}).service("employeeManager", function() {
+  this.$get = [
+    '$http', '$q', '$log', (function($http, $q, $log) {
+      return new EmployeeManager($http, $q, $log);
+    })
+  ];
+}).run(["sessionServices", "$route", "$location", "$log", "$window", '$rootScope', CafeTownsend]);

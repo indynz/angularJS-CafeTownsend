@@ -22,21 +22,15 @@ head.js (
   
   // load files in parallel but execute them in sequence
   
-  { jquery      :   "http://code.jquery.com/jquery-1.7.1.min.js"  },
-
-  { angular     :   "js/lib/angular.js#autobind"                  },
-  { uuid        :   "js/lib/uuid.js"                              },
+  { jquery      :   "js/lib/jquery.min.js"      },
+  { uuid        :   "js/lib/uuid.js"            },
   
-  { services    :   "js/build/services.js"                        },
-  { controllers :   "js/build/controllers.js"                     },
-  { directives  :   "js/build/directives.js"                      }
+  { angular     :   "js/lib/angular.js"         },
+ 
+  { cafetwonsend:   "js/build/CafeTownsend.min.js" }
+ /**
+  * { services    :   "js/build/services.js"  	  },
+  * { controllers :   "js/build/controllers.js"   },
+  * { directives  :   "js/build/directives.js"    }
+  **/
 );
-
-head.ready( "jquery", function() {
-  
-  // Configure module variables...
-  
-  window.CafeTownsend             = { };
-         CafeTownsend.Controllers = { };
-  
-});

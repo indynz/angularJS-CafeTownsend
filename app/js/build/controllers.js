@@ -43,31 +43,27 @@ LoginController = (function() {
 EmployeeController = (function() {
 
   function EmployeeController(delegate, $location) {
-    this.delegate = delegate;
     this.$location = $location;
-    this.employees = this.delegate.loadEmployees();
-    this.selected = this.delegate.selected;
+    this.employees = delegate;
     return this;
   }
 
   EmployeeController.prototype.addNew = function() {
-    this.edit(this.delegate.createEmployee());
+    this.edit(this.employees.createEmployee());
   };
 
   EmployeeController.prototype.remove = function(employee) {
     if (angular.isUndefined(employee)) return;
-    this.employees = this.delegate.deleteEmployee(employee);
-    this.selected = (this.delegate.selected = null);
-    return employee;
+    this.employees.deleteEmployee(employee);
+    this.employees.selected = null;
   };
 
   EmployeeController.prototype.select = function(employee) {
-    this.selected = (this.delegate.selected = employee);
-    return this.selected;
+    return this.employees.selected = employee;
   };
 
   EmployeeController.prototype.edit = function(employee) {
-    if (angular.isUndefined(employee)) return;
+    if (!employee) return;
     this.select(employee);
     this.$location.path("/employee/" + employee.id);
     return this.selected;
@@ -80,22 +76,20 @@ EmployeeController = (function() {
 EmployeeEditController = (function() {
 
   function EmployeeEditController(delegate, $routeParams, $location) {
+    var id, _ref;
     this.delegate = delegate;
     this.$location = $location;
-    if (angular.isDefined($routeParams.id)) {
-      this.delegate.selected = this.delegate.findEmployee($routeParams.id);
-    }
-    this.employee = angular.Object.copy(this.delegate.selected, {});
+    id = ($routeParams != null ? $routeParams.id : void 0) || ((_ref = this.delegate.selected) != null ? _ref.id : void 0);
+    this.employee = this.delegate.findEmployee(id);
     this.isEditing = this.employee.isNew || false;
     return this;
   }
 
-  EmployeeEditController.prototype.save = function() {
-    angular.Object.copy(this.employee, this.employee != null ? this.delegate.selected : void 0);
-    if (this.selected != null) delete this.delegate.selected.isNew;
-    this.delegate.saveEmployee(this.delegate.selected);
-    this.$location.path("/employee");
-    return this.selected;
+  EmployeeEditController.prototype.save = function(employee) {
+    this.delegate.saveEmployee(employee);
+    this.selected = (this.delegate.selected = employee);
+    this.selected.isNew = false;
+    return this.$location.path("/employee");
   };
 
   EmployeeEditController.prototype.cancel = function() {
@@ -118,6 +112,8 @@ EmployeeEditController = (function() {
 
 })();
 
+CafeTownsend.Controllers = {};
+
 CafeTownsend.Controllers.SessionController = SessionController;
 
 CafeTownsend.Controllers.SessionController.$inject = ["sessionServices", "$location", "$route"];
@@ -128,8 +124,8 @@ CafeTownsend.Controllers.LoginController.$inject = ["sessionServices", "$locatio
 
 CafeTownsend.Controllers.EmployeeController = EmployeeController;
 
-CafeTownsend.Controllers.EmployeeController.$inject = ["employeeServices", "$location"];
+CafeTownsend.Controllers.EmployeeController.$inject = ["employeeManager", "$location"];
 
 CafeTownsend.Controllers.EmployeeEditController = EmployeeEditController;
 
-CafeTownsend.Controllers.EmployeeEditController.$inject = ["employeeServices", "$routeParams", "$location"];
+CafeTownsend.Controllers.EmployeeEditController.$inject = ["employeeManager", "$routeParams", "$location"];
