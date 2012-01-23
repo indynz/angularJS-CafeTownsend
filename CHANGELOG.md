@@ -8,7 +8,7 @@
 
 - Uses new Angular Modules with [Dependency injection subsystem](http://docs-next.angularjs.org/guide/dev_guide.di) rewrite. 
   - `angular.services()` is no longer supported; use `angular.module()` instead
-- Uses new Angular `$q` promises to support synch data services
+- Uses new Angular `$q` promises to support asynch data services
 - Uses `class`-style coding for Services as well as Controllers
 - Revised `EmployeeManager` to blend RPC and model… now injected into EmployeeController
 - Revised partials to use reference to injected EmployeeManager in databinding
