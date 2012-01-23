@@ -115,6 +115,31 @@ The AngularJS port also demonstrates significant advantages over the SpineJS imp
       unit/                     --> unit level specs/tests
         controllersSpec.js      --> specs for controllers
 
+## Build Notes
+
+These following javascript files reference the original, hand-written javascript files.
+
+	js/master/*.js
+
+
+These `masters` are deprecated since Coffeescript is now used generate the Javascript. <br/>
+The master CoffeeScript files are in:
+
+    coffee/*.coffee
+
+Developers should use command line or the `cake` to  watch and generate the javascript builds:
+
+	js/build/*.js
+
+On background, running terminal window use the following command line:
+
+	coffee -c -b -o ./js/build -w ./coffee
+
+or use the cake script to build, consolidate, and minify the custom Javascript into Cafetownsend.min.js
+
+    cd ./coffee; cake build
+
+
 ## Pending Features
 
 This effort is still ongoing with some in-progress effort that will provide the following features:
