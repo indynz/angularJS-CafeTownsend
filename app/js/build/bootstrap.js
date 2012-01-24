@@ -9,6 +9,8 @@
   }, {
     angular: "js/lib/angular.js"
   }, {
+    directives: "js/build/directives.js"
+  }, {
     cafetownsend: "js/build/CafeTownsend.js"
   });
 

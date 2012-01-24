@@ -140,11 +140,10 @@
 
       EmployeeEditController.inject = ["employeeManager", "$routeParams", "$location"];
 
-      function EmployeeEditController(delegate, $routeParams, $location) {
+      function EmployeeEditController(employeeManager, $routeParams, $location) {
         var id, _ref;
-        this.delegate = delegate;
+        this.employeeManager = employeeManager;
         this.$location = $location;
-        this.employeeManager = this.delegate;
         id = ($routeParams != null ? $routeParams.id : void 0) || ((_ref = this.employeeManager.selected) != null ? _ref.id : void 0);
         this.employee = this.employeeManager.findEmployee(id);
         this.isEditing = this.employee.isNew || false;

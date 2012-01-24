@@ -21,9 +21,12 @@ head.js(
   { namespace   :   "js/lib/namespace.min.js"   }
   { angular     :   "js/lib/angular.js"         }
  
+  # Load application-generic directives & widgets
+  { directives:     "js/build/directives.js"    }
+
   # Load entire CafeTownsend application code/engine
   # NOTE: if change path below to use CafeTownsend.min.js
-  
+
   { cafetownsend:   "js/build/CafeTownsend.js"  }
 
 )
