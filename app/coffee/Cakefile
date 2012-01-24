@@ -4,6 +4,7 @@ PRODUCT  = "CafeTownsend"
 VERSION  = "v0.10.6"
 #FILENAME = "#{ PRODUCT }-#{ VERSION }"
 FILENAME = "#{ PRODUCT }"
+BOOTSTRAP= "bootstrap"
 
 OUTPUT_PATH = "../js/build"
 
@@ -13,7 +14,8 @@ PATH = "/usr/local/bin"
 task "build", "Builds #{ PRODUCT } JavaScript (and minified JavaScript) implementation from CoffeeScript source code", ->
 	console.log "Building #{ PRODUCT } version #{ VERSION }"
 	console.log "Compiling CafeTownsend **.coffee to #{ OUTPUT_PATH }/#{ FILENAME }.js"
-	exec "#{ PATH }/coffee --join #{ FILENAME }.js --output #{ OUTPUT_PATH } --bare  --compile ./services.coffee ./controllers.coffee ./directives.coffee", ( error, stdout, stderr ) ->
+	exec "#{ PATH }/coffee --join #{ FILENAME }.js --output #{ OUTPUT_PATH } --compile com/mindspace/cafetownsend/service com/mindspace/cafetownsend/controller com/mindspace/cafetownsend/CafeTownsendApp.coffee
+", ( error, stdout, stderr ) ->
 		console.log stdout + stderr if stdout or stderr
 		if error
 			throw error
@@ -22,12 +24,13 @@ task "build", "Builds #{ PRODUCT } JavaScript (and minified JavaScript) implemen
 			exec "closure --js #{ OUTPUT_PATH }/#{ FILENAME }.js --js_output_file #{ OUTPUT_PATH }/#{ FILENAME }.min.js", ( error, stdout, stderr ) ->
 				console.log stdout + stderr if stdout or stderr
 				throw error if error
-
-task "build-document-scripts", "Builds #{ PRODUCT } document script JavaScript implementation(s) from CoffeeScript source code", ->
-	console.log "Building #{ PRODUCT } document scripts"
-	console.log "Compiling *.coffee to #{ OUTPUT_PATH }/*.js"
-	exec "#{ PATH }/coffee --output #{ OUTPUT_PATH } --compile *.coffee", ( error, stdout, stderr ) ->
-		console.log stdout + stderr if stdout or stderr
-		if error
-			throw error
-		# TODO: minify
+	exec "#{ PATH }/coffee --output #{ OUTPUT_PATH } --compile #{ BOOTSTRAP }.coffee
+	", ( error, stdout, stderr ) ->
+			console.log stdout + stderr if stdout or stderr
+			if error
+				throw error
+			else
+				console.log "Minifying #{ OUTPUT_PATH }/#{ BOOTSTRAP }.js to #{ OUTPUT_PATH }/#{ BOOTSTRAP }.min.js"
+			exec "closure --js #{ OUTPUT_PATH }/#{ BOOTSTRAP }.js --js_output_file #{ OUTPUT_PATH }/#{ BOOTSTRAP }.min.js", ( error, stdout, stderr ) ->
+				console.log stdout + stderr if stdout or stderr
+				throw error if error
