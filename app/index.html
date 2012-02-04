@@ -4,32 +4,30 @@
     <head>
       <meta charset="utf-8">
       <title>CafeTownsend - AngularJS</title>
-      <link rel="stylesheet" href="data/css/styles.css"/>
+      <link rel="stylesheet" href="assets/css/styles.css"/>
     </head>
     
     <body>
       <div class="main-view" ng:controller="com.mindspace.cafetownsend.controller.SessionController">
           
           <header>
-              <div  ng:show="user.authenticated"  style="top:0px; display:none;" >            
+              <div id="logout" ng:show="user.authenticated" style="display:none;">            
                 <p class="main-button logout"  ng:click="logoutUser()"> Logout </p>
                 <p class="session-user"> {{user.userName}} </p>
               </div>
           </header>
+            
+         <ng:view> 
+          <div class="main-view-content stack">              
+            <div class="login active">
+              
+              <div id="spinner" class="spinner" >
+                <img id="img-spinner" src="assets/images/spinner.gif" alt="Loading"/>
+              </div>
           
-       <ng:view> 
-       
-      <div class="main-view-content stack">              
-        <div class="login active">
-          
-          <div id="spinner" class="spinner" style="display:block;">
-            <img id="img-spinner" src="data/images/spinner.gif" alt="Loading"/>
+           </div>
           </div>
-      
-       </div>
-       </div>
-      
-      </ng:view>
+        </ng:view>
        
           <footer>
               <p class="major">
@@ -47,8 +45,8 @@
       
     <!-- Javascript Loader:  http://headjs.com/#usage    -->
   
-    <script src="js/lib/head.min.js"></script>
-    <script src="js/build/bootstrap.js"  type="text/javascript" ></script>
+    <script src="assets/js/lib/head.min.js"     type="text/javascript" ></script>
+    <script src="assets/js/build/bootstrap.js"  type="text/javascript" ></script>
     
     </body>
       

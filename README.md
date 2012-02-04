@@ -63,26 +63,39 @@ The AngularJS port also demonstrates significant advantages over the SpineJS imp
 
         members.json      --> external, simple JSON data 
 
-	  coffee/			  --> master developer files for service & controller classes
+	  coffee/			  --> master developer files for service & controller classe		Cakefile          --> cake build script
+		bootstrap.coffee  	  --> asynch loader and initializer (using head.js)
 
-       	controllers.coffee    --> application controllers
-       	services.coffee       --> custom angular services
-       	directives.coffee     --> custom angular directives
+		com/mindspace/cafetownsend/	
+			CafeTownsendApp.coffee --> application class to establish routes and session
 
+			controller/			
+				SessionController.coffee
+				LoginController.coffee
+				EmployeeController.coffee
+				EmployeeEditController.coffee
+
+			service/
+				EmployeeManager.coffee
+				SessionService.coffee
+
+	  	com/mindspace/angular/
+			directive/			
+				dblClick.coffee   --> doubleClick directive
+	            focus.coffee      --> focus directive
+	
       js/                 --> javascript files
-		booter.js		  --> application booter
-
-		/master           --> original, handwritten javascript files
 		/build            --> javascript output from CoffeeScript builds
           
-        	controllers.js    --> application controllers
-        	services.js       --> custom angular services
-        	directives.js     --> custom angular directives
+			directives.js     --> library of Angular directives
+			bootstrap.js  	  --> asynch loader and initializer (using head.js)
+			CafeTownsend.js   --> CafeTownsend services, controllers, and models
 
         lib/              --> angular and 3rd party javascript libraries
             angular.js      --> AngularJS v0.10.5 IoC Framework
 			jquery.min.js   --> jQuery v1.7 minified
-			head.js         --> asynch script loader
+			head.min.js     --> asynch script loader
+			namespace.min.js--> namespace support for `package` class organization
 			uuid.js			--> uuid generator
 
     config/jsTestDriver.conf    --> config file for JsTestDriver
@@ -117,28 +130,14 @@ The AngularJS port also demonstrates significant advantages over the SpineJS imp
 
 ## Build Notes
 
-These following javascript files reference the original, hand-written javascript files.
 
-	js/master/*.js
-
-
-These `masters` are deprecated since Coffeescript is now used generate the Javascript. <br/>
-The master CoffeeScript files are in:
-
-    coffee/*.coffee
-
-Developers should use command line or the `cake` to  watch and generate the javascript builds:
-
-	js/build/*.js
-
-On background, running terminal window use the following command line:
-
-	coffee -c -b -o ./js/build -w ./coffee
-
-or use the cake script to build, consolidate, and minify the custom Javascript into Cafetownsend.min.js
+Developers should use the cake script to build, consolidate, and minify the custom Javascript into Cafetownsend.min.js
 
     cd ./coffee; cake build
 
+*  CafeTownsend.js - consolidate application code
+*  bootstrap.js    - asynch loader and initializer (using head.js)
+*  directives.js   - reusable library of Angular directives
 
 ## Pending Features
 
