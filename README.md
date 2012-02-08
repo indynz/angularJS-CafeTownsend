@@ -47,7 +47,7 @@ The AngularJS port also demonstrates significant advantages over the SpineJS imp
 
     app/                  --> all of the files to be used in production
 
-      cafetownsend.html   --> application file (the main html template file of the app)
+      CafeTownsend.html   --> application file (the main html template file of the app)
 
 	    assets/
 
@@ -65,25 +65,24 @@ The AngularJS port also demonstrates significant advantages over the SpineJS imp
           members.json      --> external, simple JSON data
         
         js/
-          build/            --> javascript output from CoffeeScript builds
-            CafeTownsend.js --> application source code
-            bootstrap.js    --> asynch loader and initializer (using head.js)
+          CafeTownsend.js --> application source code
+          bootstrap.js    --> asynch loader and initializer (using head.js)
 
           lib/
             /angular
                 angular.js      --> AngularJS v0.10.5 IoC Framework
             
-            jquery.min.js   --> jQuery v1.7 minified
-            head.min.js     --> asynch script loader
-            namespace.min.js--> namespace support for `package` class organization
-            uuid.js     --> uuid generator
+            jquery.min.js       --> jQuery v1.7 minified
+            head.load.min.js    --> asynch script loader
+            namespace.min.js    --> namespace support for `package` class organization
+            uuid.js             --> uuid generator
     src/      
       Cakefile              --> cake build script
       
       coffee/			          --> master developer files for service & controller classe		
         bootstrap.coffee  	--> asynch loader and initializer (using head.js)
 
-		    com/mindspace/cafetownsend/	
+		    mindspace/cafetownsend/	
             CafeTownsendApp.coffee --> application class to establish routes and session
 
       			controller/			
@@ -98,8 +97,7 @@ The AngularJS port also demonstrates significant advantages over the SpineJS imp
 
       	  	com/mindspace/angular/
         			directive/			
-        				dblClick.coffee   --> doubleClick directive
-        	            focus.coffee      --> focus directive
+        				EventDirectives.coffee   --> doubleClick, focuse directives
 	
     scripts/              --> handy shell/js/ruby scripts
       web-server.js       --> simple development webserver based on node.js
@@ -114,7 +112,6 @@ Developers should use the cake script to build, consolidate, and minify the cust
 
 *  CafeTownsend.js - consolidate application code
 *  bootstrap.js    - asynch loader and initializer (using head.js)
-*  directives.js   - reusable library of Angular directives
 
 ## Pending Features
 

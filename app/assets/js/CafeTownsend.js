@@ -1,7 +1,46 @@
 (function() {
-  var CafeTownsendApp, EmployeeController, EmployeeEditController, EmployeeManager, LoginController, SessionController, SessionService;
+  var CafeTownsendApp, EmployeeController, EmployeeEditController, EmployeeManager, EventDirectives, LoginController, SessionController, SessionService;
 
-  namespace('com.mindspace.cafetownsend.service', {
+  namespace('mindspace.angular.directive', {
+    EventDirectives: EventDirectives = (function() {
+
+      function EventDirectives() {}
+
+      EventDirectives.onLoad = function(scope, element, attrs) {
+        var expression, token,
+          _this = this;
+        expression = attrs['ngOnload'];
+        token = setInterval(function() {
+          clearInterval(token);
+          scope.$apply(expression);
+        });
+      };
+
+      EventDirectives.dblClick = function(scope, element, attrs) {
+        element.bind("dblclick", function(event) {
+          scope.$apply(attrs['ngDblclick']);
+          event.stopImmediatePropagation();
+          return false;
+        });
+      };
+
+      EventDirectives.focus = function(scope, element, attrs) {
+        var expression;
+        expression = attrs['ngFocus'];
+        scope.$watch(expression, (function() {
+          var el;
+          el = element[0];
+          el.focus();
+          el.select();
+        }), element);
+      };
+
+      return EventDirectives;
+
+    })()
+  });
+
+  namespace('mindspace.cafetownsend.service', {
     EmployeeManager: EmployeeManager = (function() {
 
       EmployeeManager.$inject = ["$http", '$q', "$log"];
@@ -73,7 +112,7 @@
     })()
   });
 
-  namespace('com.mindspace.cafetownsend.service', {
+  namespace('mindspace.cafetownsend.service', {
     SessionService: SessionService = (function() {
 
       SessionService.$inject = ["$log"];
@@ -97,37 +136,44 @@
     })()
   });
 
-  namespace('com.mindspace.cafetownsend.controller', {
+  namespace('mindspace.cafetownsend.controller', {
     EmployeeController: EmployeeController = (function() {
 
-      EmployeeController.inject = ["employeeManager", "$location"];
+      EmployeeController.inject = ["$scope", "employeeManager", "$location"];
 
-      function EmployeeController(employeeManager, $location) {
+      function EmployeeController($scope, employeeManager, $location) {
+        this.$scope = $scope;
         this.employeeManager = employeeManager;
         this.$location = $location;
-        this.employees = this.employeeManager;
-        return this;
+        this.$scope.employees = this.employeeManager;
+        this.$scope.selected = null;
+        this.$scope.addNew = angular.bind(this, this.addNew);
+        this.$scope.remove = angular.bind(this, this.remove);
+        this.$scope.select = angular.bind(this, this.select);
+        this.$scope.edit = angular.bind(this, this.edit);
+        return;
       }
 
       EmployeeController.prototype.addNew = function() {
-        this.edit(this.employees.createEmployee());
+        this.edit(this.$scope.employees.createEmployee());
       };
 
       EmployeeController.prototype.remove = function(employee) {
         if (angular.isUndefined(employee)) return;
-        this.employees.deleteEmployee(employee);
-        this.employees.selected = null;
+        this.$scope.employees.deleteEmployee(employee);
+        this.$scope.employees.selected = this.$scope.selected = null;
+        return employee;
       };
 
       EmployeeController.prototype.select = function(employee) {
-        return this.employees.selected = employee;
+        return this.$scope.selected = this.$scope.employees.selected = employee;
       };
 
       EmployeeController.prototype.edit = function(employee) {
         if (!employee) return;
         this.select(employee);
         this.$location.path("/employee/" + employee.id);
-        return this.selected;
+        return this.$scope.selected;
       };
 
       return EmployeeController;
@@ -135,33 +181,38 @@
     })()
   });
 
-  namespace('com.mindspace.cafetownsend.controller', {
+  namespace('mindspace.cafetownsend.controller', {
     EmployeeEditController: EmployeeEditController = (function() {
 
-      EmployeeEditController.inject = ["employeeManager", "$routeParams", "$location"];
+      EmployeeEditController.inject = ["$scope", "employeeManager", "$routeParams", "$location"];
 
-      function EmployeeEditController(employeeManager, $routeParams, $location) {
+      function EmployeeEditController($scope, employeeManager, $routeParams, $location) {
         var id, _ref;
+        this.$scope = $scope;
         this.employeeManager = employeeManager;
         this.$location = $location;
         id = ($routeParams != null ? $routeParams.id : void 0) || ((_ref = this.employeeManager.selected) != null ? _ref.id : void 0);
-        this.employee = this.employeeManager.findEmployee(id);
-        this.isEditing = this.employee.isNew || false;
-        return this;
+        this.$scope.employee = this.employeeManager.findEmployee(id);
+        this.$scope.isEditing = this.$scope.employee.isNew || false;
+        this.$scope.save = angular.bind(this, this.save);
+        this.$scope.cancel = angular.bind(this, this.cancel);
+        this.$scope.remove = angular.bind(this, this.remove);
+        return;
       }
 
       EmployeeEditController.prototype.save = function(employee) {
         this.employeeManager.saveEmployee(employee);
-        this.selected = (this.employeeManager.selected = employee);
-        this.selected.isNew = false;
-        return this.$location.path("/employee");
+        this.$scope.selected = (this.employeeManager.selected = employee);
+        this.$scope.selected.isNew = false;
+        this.$location.path("/employee");
+        return employee;
       };
 
       EmployeeEditController.prototype.cancel = function() {
-        if (this.isEditing) {
+        if (this.$scope.isEditing) {
           this.employeeManager.deleteEmployee(this.employee);
           this.employeeManager.selected = null;
-          this.employee = null;
+          this.$scope.employee = null;
         }
         this.$location.path("/employee");
       };
@@ -169,7 +220,7 @@
       EmployeeEditController.prototype.remove = function() {
         this.employeeManager.deleteEmployee(this.employee);
         this.employeeManager.selected = null;
-        this.employee = null;
+        this.$scope.employee = null;
         this.$location.path("/employee");
       };
 
@@ -178,15 +229,18 @@
     })()
   });
 
-  namespace('com.mindspace.cafetownsend.controller', {
+  namespace('mindspace.cafetownsend.controller', {
     LoginController: LoginController = (function() {
 
-      LoginController.inject = ["sessionService", "$location"];
+      LoginController.inject = ["$scope", "sessionService", "$location"];
 
-      function LoginController(sessionService, $location) {
+      function LoginController($scope, sessionService, $location) {
+        this.$scope = $scope;
         this.sessionService = sessionService;
         this.$location = $location;
-        return this;
+        this.$scope.user = this.sessionService.session;
+        this.$scope.authenticateUser = angular.bind(this, this.authenticateUser);
+        return this.$scope;
       }
 
       LoginController.prototype.authenticateUser = function() {
@@ -203,17 +257,18 @@
     })()
   });
 
-  namespace('com.mindspace.cafetownsend.controller', {
+  namespace('mindspace.cafetownsend.controller', {
     SessionController: SessionController = (function() {
 
-      SessionController.inject = ["sessionService", "$location", "$route"];
+      SessionController.inject = ["$scope", "sessionManager", "$location", "$route"];
 
-      function SessionController(sessionService, $location, $route) {
+      function SessionController($scope, sessionService, $location, $route) {
         this.sessionService = sessionService;
         this.$location = $location;
-        this.user = this.sessionService.session;
-        $route.parent(this);
-        return this;
+        $scope.user = this.sessionService.session;
+        $scope.logoutUser = angular.bind(this, this.logoutUser);
+        $route.parent($scope);
+        return $scope;
       }
 
       SessionController.prototype.logoutUser = function(event) {
@@ -226,7 +281,7 @@
     })()
   });
 
-  namespace('com.mindspace.cafetownsend', {
+  namespace('mindspace.cafetownsend', {
     CafeTownsendApp: CafeTownsendApp = (function() {
 
       CafeTownsendApp.$inject = ["sessionService", "$route", "$location", "$log", "$window", '$rootScope'];
@@ -239,15 +294,15 @@
         $log.log("initializing CafeTownsend routes...");
         $route.when("/login", {
           template: "assets/tmpl/login.html",
-          controller: com.mindspace.cafetownsend.controller.LoginController
+          controller: mindspace.cafetownsend.controller.LoginController
         });
         $route.when("/employee", {
           template: "assets/tmpl/employees.html",
-          controller: com.mindspace.cafetownsend.controller.EmployeeController
+          controller: mindspace.cafetownsend.controller.EmployeeController
         });
         $route.when("/employee/:id", {
           template: "assets/tmpl/employee_edit.html",
-          controller: com.mindspace.cafetownsend.controller.EmployeeEditController
+          controller: mindspace.cafetownsend.controller.EmployeeEditController
         });
         $route.otherwise({
           redirectTo: "/employee"

@@ -34,7 +34,7 @@
 # Get list of all employees and current/selected employee
 # ********************************************
 
-namespace 'com.mindspace.cafetownsend.service'
+namespace 'mindspace.cafetownsend.service'
 
   EmployeeManager:
 

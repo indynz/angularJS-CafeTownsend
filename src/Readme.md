@@ -19,5 +19,5 @@ On background, running terminal window use the following command line:
 To manually build and deploy the application code, developers can use the cake file:
 
    cd src
-   cake build
+   cake deploy
 

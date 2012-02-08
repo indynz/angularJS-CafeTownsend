@@ -1,57 +1,108 @@
 { exec } = require 'child_process'
 
-PRODUCT  = "CafeTownsend"
-VERSION  = "v0.10.6"
-#FILENAME = "#{ PRODUCT }-#{ VERSION }"
-FILENAME = "#{ PRODUCT }"
-BOOTSTRAP= "bootstrap"
-DIRECTIVES= "directives"
+PRODUCT     = "CafeTownsend"
+VERSION     = "v0.10.7"
+FILENAME    = "#{ PRODUCT }"
+BOOTSTRAP   = "bootstrap"
 
-OUTPUT_PATH = "../app/assets/js/build"
+DEBUG_PATH  = "../app/assets/js/debug"
+OUTPUT_PATH = "../app/assets/js"
+CSS_PATH    = "../app/assets/css"
 
 # TODO: Remove - temporarily added until next build of coffee-script is released.
 PATH = "/usr/local/bin"
 
-task "build", "Builds #{ PRODUCT } JavaScript (and minified JavaScript) implementation from CoffeeScript source code", ->
+
+# -------------------------------------------------------------
+# Compile Coffeescript to Javascript
+# -------------------------------------------------------------
+
+task "debug", "Transcompiles Coffescript to JavaScript... no joins or minifications", ->
+	
+	#
+	# Build single-file CafeTownsend application engine
+	#
+	console.log "Compiling CafeTownsend classes  #{ DEBUG_PATH }/*.js"
+	exec "#{ PATH }/coffee --output #{ DEBUG_PATH } --compile coffee/mindspace/angular/ coffee/mindspace/cafetownsend/service coffee/mindspace/cafetownsend/controller coffee/mindspace/cafetownsend/CafeTownsendApp.coffee", ( error, stdout, stderr ) ->
+
+		console.log stdout + stderr if stdout or stderr
+		if error
+			throw error
+
+	#
+	# Build bootstrap for application
+	#
+	console.log "Compiling CafeTownsend loader to #{ DEBUG_PATH }/#{ BOOTSTRAP }.js"
+	exec "#{ PATH }/coffee --output #{ DEBUG_PATH } --compile coffee/#{ BOOTSTRAP }.coffee
+	", ( error, stdout, stderr ) ->
+	
+		console.log stdout + stderr if stdout or stderr
+		if error
+			throw error
+
+
+# -------------------------------------------------------------
+# Build without minification
+# -------------------------------------------------------------
+
+task "build", "Builds #{ PRODUCT } JavaScript & CSS from CoffeeScript & Less source code", ->
 	console.log "Building #{ PRODUCT } version #{ VERSION }"
 	
+	#
 	# Build single-file CafeTownsend application engine
-
+	#
 	console.log "Compiling CafeTownsend **.coffee to #{ OUTPUT_PATH }/#{ FILENAME }.js"
-	exec "#{ PATH }/coffee --join #{ FILENAME }.js --output #{ OUTPUT_PATH } --compile coffee/com/mindspace/cafetownsend/service coffee/com/mindspace/cafetownsend/controller coffee/com/mindspace/cafetownsend/CafeTownsendApp.coffee
+	exec "#{ PATH }/coffee --join #{ FILENAME }.js --output #{ OUTPUT_PATH } --compile coffee/mindspace/angular/ coffee/mindspace/cafetownsend/service coffee/mindspace/cafetownsend/controller coffee/mindspace/cafetownsend/CafeTownsendApp.coffee
+", ( error, stdout, stderr ) ->
+	
+		console.log stdout + stderr if stdout or stderr
+		if error
+			throw error
+
+
+	#
+	# Build bootstrap for application
+	#
+	console.log "Compiling CafeTownsend Loader to #{ OUTPUT_PATH }/#{ BOOTSTRAP }.js"
+	exec "#{ PATH }/coffee --output #{ OUTPUT_PATH } --compile coffee/#{ BOOTSTRAP }.coffee
+	", ( error, stdout, stderr ) ->
+			console.log stdout + stderr if stdout or stderr
+			if error
+				throw error
+
+# -------------------------------------------------------------
+# Deploy build minified
+# -------------------------------------------------------------
+
+task "deploy", "Builds #{ PRODUCT } minified JavaScript & CSS", ->
+	console.log "Building #{ PRODUCT } version #{ VERSION }"
+	
+	#
+	# Build single-file CafeTownsend application engine
+	#
+	console.log "Compiling CafeTownsend **.coffee to #{ OUTPUT_PATH }/#{ FILENAME }.js"
+	exec "#{ PATH }/coffee --join #{ FILENAME }.js --output #{ OUTPUT_PATH } --compile coffee/mindspace/angular/ coffee/mindspace/cafetownsend/service coffee/mindspace/cafetownsend/controller coffee/mindspace/cafetownsend/CafeTownsendApp.coffee
 ", ( error, stdout, stderr ) ->
 		console.log stdout + stderr if stdout or stderr
 		if error
 			throw error
 		else
-			console.log "Minifying #{ OUTPUT_PATH }/#{ FILENAME }.js to #{ OUTPUT_PATH }/min/#{ FILENAME }.min.js"
+			console.log "Minifying #{ OUTPUT_PATH }/#{ FILENAME }.js to #{ OUTPUT_PATH }/#{ FILENAME }.min.js"
 			exec "closure --js #{ OUTPUT_PATH }/#{ FILENAME }.js --js_output_file #{ OUTPUT_PATH }/min/#{ FILENAME }.min.js", ( error, stdout, stderr ) ->
 				console.log stdout + stderr if stdout or stderr
 				throw error if error
-
-	# Build single directives file for AngularJS 
-
-	console.log "Compiling directives to #{ OUTPUT_PATH }/#{ DIRECTIVES }.js"
-	exec "#{ PATH }/coffee  --join #{ DIRECTIVES }.js  --output #{ OUTPUT_PATH } --compile coffee/com/mindspace/angular/directive", ( error, stdout, stderr ) ->
-			console.log stdout + stderr if stdout or stderr
-			if error
-				throw error
-			else
-				console.log "Minifying #{ OUTPUT_PATH }/#{ DIRECTIVES }.js to #{ OUTPUT_PATH }/min/#{ DIRECTIVES }.min.js"
-			exec "closure --js #{ OUTPUT_PATH }/#{ DIRECTIVES }.js --js_output_file #{ OUTPUT_PATH }/min/#{ DIRECTIVES }.min.js", ( error, stdout, stderr ) ->
-				console.log stdout + stderr if stdout or stderr
-				throw error if error
-	
+	#
 	# Build bootstrap for application
-
-	console.log "Compiling #{ OUTPUT_PATH }/#{ BOOTSTRAP }.js"
+	#
+	console.log "Compiling CafeTownsend Loader to #{ OUTPUT_PATH }/#{ BOOTSTRAP }.js"
 	exec "#{ PATH }/coffee --output #{ OUTPUT_PATH } --compile coffee/#{ BOOTSTRAP }.coffee
 	", ( error, stdout, stderr ) ->
 			console.log stdout + stderr if stdout or stderr
 			if error
 				throw error
 			else
-				console.log "Minifying #{ OUTPUT_PATH }/#{ BOOTSTRAP }.js to #{ OUTPUT_PATH }/min/#{ BOOTSTRAP }.min.js"
+				console.log "Minifying #{ OUTPUT_PATH }/#{ BOOTSTRAP }.js to #{ OUTPUT_PATH }/#{ BOOTSTRAP }.min.js"
 			exec "closure --js #{ OUTPUT_PATH }/#{ BOOTSTRAP }.js --js_output_file #{ OUTPUT_PATH }/min/#{ BOOTSTRAP }.min.js", ( error, stdout, stderr ) ->
 				console.log stdout + stderr if stdout or stderr
 				throw error if error
+

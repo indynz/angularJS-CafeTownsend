@@ -7,33 +7,43 @@
 # 
 # ********************************************
 
-namespace 'com.mindspace.cafetownsend.controller'
+namespace 'mindspace.cafetownsend.controller'
 
   EmployeeEditController:
 
 
     class EmployeeEditController 
-      @inject : [ "employeeManager", "$routeParams", "$location" ]
+      @inject : [ "$scope", "employeeManager", "$routeParams", "$location" ]
       
-      constructor : (@employeeManager, $routeParams, @$location) ->  
-        id          = $routeParams?.id || @employeeManager.selected?.id
-        @employee   = @employeeManager.findEmployee( id )
-        @isEditing  = @employee.isNew or false
-        return this
+      constructor : (@$scope, @employeeManager, $routeParams, @$location) ->  
+        id                 = $routeParams?.id || @employeeManager.selected?.id
+
+        @$scope.employee   = @employeeManager.findEmployee( id )
+        @$scope.isEditing  = @$scope.employee.isNew or false
+        
+        @$scope.save   = angular.bind( this, @save   )
+        @$scope.cancel = angular.bind( this, @cancel )
+        @$scope.remove = angular.bind( this, @remove )
+
+        return
 
       # 1) Save updated employee information & return to employee list
       save : (employee) ->
         @employeeManager.saveEmployee( employee )
-        @selected = ( @employeeManager.selected = employee )
-        @selected.isNew = false
+
+        @$scope.selected = ( @employeeManager.selected = employee )
+        @$scope.selected.isNew = false
+        
         @$location.path( "/employee" )
+        return employee
 
       # 2) Cancel edits for current employee
       cancel : ->
-        if @isEditing
+        if @$scope.isEditing
           @employeeManager.deleteEmployee( @employee ) 
           @employeeManager.selected  = null
-          @employee           = null
+          @$scope.employee           = null
+
         @$location.path( "/employee" )
         return
 
@@ -41,7 +51,9 @@ namespace 'com.mindspace.cafetownsend.controller'
       remove : ->
         @employeeManager.deleteEmployee( @employee )
         @employeeManager.selected  = null
-        @employee           = null
+        
+        @$scope.employee           = null
+
         @$location.path( "/employee" )
         return
       

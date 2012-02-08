@@ -37,7 +37,7 @@
 # 
 # ********************************************
 
-namespace 'com.mindspace.cafetownsend'
+namespace 'mindspace.cafetownsend'
 
   CafeTownsendApp:
 
@@ -51,13 +51,13 @@ namespace 'com.mindspace.cafetownsend'
         # Configure template rendering based on routes
         $route.when "/login",
           template: "assets/tmpl/login.html"
-          controller: com.mindspace.cafetownsend.controller.LoginController
+          controller: mindspace.cafetownsend.controller.LoginController
         $route.when "/employee",
           template: "assets/tmpl/employees.html"
-          controller: com.mindspace.cafetownsend.controller.EmployeeController
+          controller: mindspace.cafetownsend.controller.EmployeeController
         $route.when "/employee/:id",
           template: "assets/tmpl/employee_edit.html"
-          controller: com.mindspace.cafetownsend.controller.EmployeeEditController
+          controller: mindspace.cafetownsend.controller.EmployeeEditController
         $route.otherwise( redirectTo: "/employee" )
         
         # Now listen for `#afterRouteChange` events

@@ -36,7 +36,7 @@
 #  
 # ********************************************
 
-namespace 'com.mindspace.cafetownsend.service'
+namespace 'mindspace.cafetownsend.service'
 
   SessionService:
 

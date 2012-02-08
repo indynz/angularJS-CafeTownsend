@@ -34,19 +34,20 @@
 # 
 # ********************************************
 
-namespace 'com.mindspace.cafetownsend.controller'
+namespace 'mindspace.cafetownsend.controller'
 
   SessionController:
 
     class SessionController
-      @inject : [ "sessionService", "$location", "$route" ]
-
-      constructor:  ( @sessionService, @$location, $route ) ->  
-        @user = @sessionService.session
+      @inject : [ "$scope", "sessionManager", "$location", "$route" ]
+      
+      constructor : ( $scope, @sessionService, @$location, $route ) ->  
+        $scope.user        = @sessionService.session
+        $scope.logoutUser  = angular.bind(this, @logoutUser)
 
         # Configure session model (for authentication) as root/parent scope for scopes created on route change.
-        $route.parent( this )
-        return this
+        $route.parent( $scope )
+        return $scope
 
       logoutUser : (event) ->
         @sessionService.logout()
