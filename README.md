@@ -14,7 +14,8 @@ Recently a developer contributed an HTML5 port of the application using the java
 This project contributes a superior port of the HTML5 CafeTownsend application;using the [Angular.js IoC](http://angularjs.org/) framework.
 
 
-![Screenshot](https://github.com/ThomasBurleson/angularJS-CafeTownsend/raw/master/app/data/images/screens.png)<br/>
+![Screenshot](https://github.com/ThomasBurleson/angularJS-CafeTownsend/blob/master/app/assets/images/screens.png)<br/>
+
 
 Click to play with the live [CafeTownsend Demo](http://thomasburleson.github.com/cafetownsend/index.html).
 
